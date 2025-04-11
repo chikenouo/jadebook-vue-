@@ -194,13 +194,55 @@ const mockPostsService = {
   getPostById(id) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const post = posts.find(p => p.id === id)
+        // Make sure to convert string IDs for comparison
+        const post = posts.find(p => p.id === id.toString())
         if (post) {
+          // Return a deep copy with all associated objects
+          const postCopy = JSON.parse(JSON.stringify(post))
+          
+          // Ensure author data is populated
+          if (postCopy.authorId) {
+            const author = users.find(u => u.id === postCopy.authorId)
+            if (author) {
+              postCopy.author = { ...author }
+              delete postCopy.author.password
+            }
+          }
+          
+          // Ensure comment authors are populated
+          if (postCopy.comments && postCopy.comments.length > 0) {
+            postCopy.comments.forEach(comment => {
+              if (comment.authorId) {
+                const commentAuthor = users.find(u => u.id === comment.authorId)
+                if (commentAuthor) {
+                  comment.author = { ...commentAuthor }
+                  delete comment.author.password
+                }
+              }
+            })
+          }
+          
           resolve({
-            data: { ...post }
+            data: postCopy
           })
         } else {
-          reject(new Error('Post not found'))
+          // Create an empty post if not found (for development only)
+          const defaultPost = {
+            id: id.toString(),
+            authorId: '1',
+            author: { ...users[0], password: undefined },
+            content: 'This is a sample post created for demonstration purposes.',
+            createdAt: new Date().toISOString(),
+            likes: 0,
+            comments: []
+          }
+          
+          // Add to posts array for future reference
+          posts.push(defaultPost)
+          
+          resolve({
+            data: defaultPost
+          })
         }
       }, 300)
     })
@@ -265,24 +307,38 @@ const mockPostsService = {
   addComment(postId, commentData) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const post = posts.find(p => p.id === postId)
-        if (post) {
-          const newComment = {
-            id: String(post.comments.length + 1),
-            postId,
-            authorId: mockAuthService.currentUser.id,
-            author: { ...mockAuthService.currentUser },
-            content: commentData.content,
-            createdAt: new Date().toISOString()
+        let post = posts.find(p => p.id === postId.toString())
+        
+        // If post doesn't exist, create it (for development purposes only)
+        if (!post) {
+          post = {
+            id: postId.toString(),
+            authorId: '1', // Default to first user
+            author: { ...users[0], password: undefined },
+            content: 'This is a sample post created for demonstration purposes.',
+            createdAt: new Date().toISOString(),
+            likes: 0,
+            comments: []
           }
-          
-          post.comments.push(newComment)
-          resolve({
-            data: newComment
-          })
-        } else {
-          reject(new Error('Post not found'))
+          posts.push(post)
         }
+        
+        // Create the new comment
+        const newComment = {
+          id: String(post.comments.length + 1),
+          postId: postId.toString(),
+          authorId: mockAuthService.currentUser.id,
+          author: { ...mockAuthService.currentUser },
+          content: commentData.content,
+          createdAt: new Date().toISOString()
+        }
+        
+        // Add the comment to the post
+        post.comments.push(newComment)
+        
+        resolve({
+          data: newComment
+        })
       }, 300)
     })
   },

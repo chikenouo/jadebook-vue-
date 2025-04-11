@@ -2,6 +2,28 @@
   <div class="marketplace-container">
     <div class="marketplace-header">
       <h1>商品市集</h1>
+      
+      <!-- 精選商品輪播 -->
+      <div class="featured-products" v-if="featuredProducts.length > 0">
+        <h2 class="featured-title">精選商品</h2>
+        <div class="featured-carousel">
+          <div 
+            v-for="product in featuredProducts" 
+            :key="product.id" 
+            class="featured-product-card"
+            @click="openProductDetails(product)"
+          >
+            <div class="featured-product-image">
+              <img :src="product.image" :alt="product.title">
+            </div>
+            <div class="featured-product-info">
+              <div class="featured-product-price">${{ product.price.toLocaleString() }}</div>
+              <div class="featured-product-title">{{ product.title }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div class="marketplace-filters">
         <div class="filter-section">
           <el-input
@@ -77,57 +99,90 @@
     <!-- Product Details Dialog -->
     <el-dialog
       v-model="productDetailsVisible"
-      :title="selectedProduct?.title || '商品詳情'"
-      width="600px"
+      :title="null"
+      width="800px"
       destroy-on-close
+      custom-class="product-detail-dialog"
+      :show-close="true"
+      fullscreen-on-mobile
     >
+      <template #header>
+        <div class="dialog-empty-header"></div>
+      </template>
+      
       <div v-if="selectedProduct" class="product-details">
-        <div class="product-detail-gallery">
-          <img :src="selectedProduct.image" :alt="selectedProduct.title" class="main-product-image">
-        </div>
-        
-        <div class="product-detail-info">
-          <h2 class="product-detail-price">${{ selectedProduct.price.toLocaleString() }}</h2>
-          <h3 class="product-detail-title">{{ selectedProduct.title }}</h3>
-          
-          <div class="product-detail-meta">
-            <div class="meta-item">
-              <i class="fas fa-map-marker-alt"></i> {{ selectedProduct.location }}
-            </div>
-            <div class="meta-item">
-              <i class="fas fa-tag"></i> {{ selectedProduct.category }}
-            </div>
-            <div class="meta-item">
-              <i class="fas fa-clock"></i> {{ formatDate(selectedProduct.listed_date) }}
-            </div>
+        <div class="product-detail-left">
+          <div class="product-detail-gallery">
+            <img :src="selectedProduct.image" :alt="selectedProduct.title" class="main-product-image">
           </div>
           
-          <div class="product-detail-description">
-            <h4>描述</h4>
-            <p>{{ selectedProduct.description }}</p>
-          </div>
-          
-          <div class="product-detail-seller">
-            <h4>賣家資訊</h4>
-            <div class="seller-info">
-              <img :src="selectedProduct.seller.avatar" alt="Seller" class="seller-avatar">
-              <div>
-                <div class="seller-name">{{ selectedProduct.seller.name }}</div>
-                <div class="seller-rating">
-                  <i class="fas fa-star"></i>
-                  {{ selectedProduct.seller.rating }} · {{ selectedProduct.seller.reviews }} 個評價
+          <div class="product-detail-similar mobile-hidden">
+            <h4 class="similar-title">類似商品</h4>
+            <div class="similar-products">
+              <div 
+                v-for="product in filteredProducts.slice(0,4)" 
+                :key="product.id" 
+                class="similar-product-card"
+                v-if="product.id !== selectedProduct.id"
+                @click="openProductDetails(product)"
+              >
+                <div class="similar-product-image">
+                  <img :src="product.image" :alt="product.title">
                 </div>
+                <div class="similar-product-price">${{ product.price.toLocaleString() }}</div>
               </div>
             </div>
           </div>
-          
-          <div class="product-detail-actions">
-            <el-button type="primary" class="action-button">
-              <i class="fas fa-comment"></i> 聯絡賣家
-            </el-button>
-            <el-button class="action-button">
-              <i class="fas fa-bookmark"></i> 收藏商品
-            </el-button>
+        </div>
+        
+        <div class="product-detail-right">
+          <div class="product-detail-info">
+            <h2 class="product-detail-price">${{ selectedProduct.price.toLocaleString() }}</h2>
+            <h3 class="product-detail-title">{{ selectedProduct.title }}</h3>
+            
+            <div class="product-detail-meta">
+              <div class="meta-item">
+                <i class="fas fa-map-marker-alt"></i> {{ selectedProduct.location }}
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-tag"></i> {{ selectedProduct.category }}
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-clock"></i> {{ formatDate(selectedProduct.listed_date) }}
+              </div>
+            </div>
+            
+            <div class="product-detail-actions">
+              <el-button type="primary" class="action-button">
+                <i class="fas fa-comment"></i> 聯絡賣家
+              </el-button>
+              <el-button class="action-button">
+                <i class="fas fa-bookmark"></i> 收藏商品
+              </el-button>
+            </div>
+            
+            <el-divider />
+            
+            <div class="product-detail-seller">
+              <div class="seller-info">
+                <img :src="selectedProduct.seller.avatar" alt="Seller" class="seller-avatar">
+                <div>
+                  <div class="seller-name">{{ selectedProduct.seller.name }}</div>
+                  <div class="seller-rating">
+                    <i class="fas fa-star"></i>
+                    {{ selectedProduct.seller.rating }} · {{ selectedProduct.seller.reviews }} 個評價
+                  </div>
+                </div>
+              </div>
+              <el-button type="text" class="view-profile-button">查看賣家檔案 <i class="fas fa-angle-right"></i></el-button>
+            </div>
+            
+            <el-divider />
+            
+            <div class="product-detail-description">
+              <h4>商品詳情</h4>
+              <p>{{ selectedProduct.description }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -307,6 +362,14 @@ export default {
     }
   },
   computed: {
+    // 精選商品（推薦商品）
+    featuredProducts() {
+      // 从所有商品中选择前3个价格最高的商品作为精选商品
+      return [...this.products]
+        .sort((a, b) => b.price - a.price)
+        .slice(0, 3);
+    },
+    
     filteredProducts() {
       let filtered = [...this.products]
       
@@ -391,6 +454,111 @@ export default {
   color: var(--esun-green);
 }
 
+/* 精選商品樣式 */
+.featured-products {
+  margin-bottom: 24px;
+}
+
+.featured-title {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: var(--esun-green);
+}
+
+.featured-carousel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.featured-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.featured-carousel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.featured-carousel::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.featured-carousel::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+.featured-product-card {
+  flex: 0 0 280px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.featured-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.featured-product-card::after {
+  content: "精選";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--esun-green);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.featured-product-image {
+  height: 180px;
+  overflow: hidden;
+}
+
+.featured-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.featured-product-card:hover .featured-product-image img {
+  transform: scale(1.05);
+}
+
+.featured-product-info {
+  padding: 12px;
+}
+
+.featured-product-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--esun-green);
+  margin-bottom: 4px;
+}
+
+.featured-product-title {
+  font-size: 14px;
+  color: #1c1e21;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 40px;
+}
+
 .marketplace-filters {
   display: flex;
   flex-wrap: wrap;
@@ -459,6 +627,30 @@ export default {
   flex: 1;
 }
 
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .marketplace-content {
+    flex-direction: column;
+  }
+  
+  .desktop-only {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-section {
+    min-width: 100%;
+  }
+}
+
 .product-card {
   border-radius: 8px;
   overflow: hidden;
@@ -522,29 +714,107 @@ export default {
 }
 
 /* Product Details Dialog */
+.product-detail-dialog .el-dialog__header {
+  padding: 0;
+  margin: 0;
+}
+
+.dialog-empty-header {
+  height: 0;
+}
+
+.product-detail-dialog .el-dialog__body {
+  padding: 0;
+}
+
 .product-details {
   display: flex;
-  flex-direction: column;
+  width: 100%;
+}
+
+.product-detail-left {
+  flex: 1;
+  max-width: 55%;
+  border-right: 1px solid #e4e6eb;
+}
+
+.product-detail-right {
+  flex: 1;
+  max-width: 45%;
 }
 
 .product-detail-gallery {
+  padding: 0;
+  background-color: #f0f2f5;
   width: 100%;
-  margin-bottom: 20px;
 }
 
 .main-product-image {
   width: 100%;
-  height: 300px;
+  height: 400px;
   object-fit: contain;
+  display: block;
+}
+
+.product-detail-similar {
+  padding: 16px;
+  border-top: 1px solid #e4e6eb;
+}
+
+.similar-title {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #1c1e21;
+}
+
+.similar-products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.similar-product-card {
   border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+.similar-product-image {
+  height: 100px;
+  overflow: hidden;
+}
+
+.similar-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.similar-product-card:hover .similar-product-image img {
+  transform: scale(1.05);
+}
+
+.similar-product-price {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
 }
 
 .product-detail-info {
-  padding: 0 10px;
+  padding: 24px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .product-detail-price {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   margin-bottom: 8px;
   color: var(--esun-green);
@@ -554,13 +824,14 @@ export default {
   font-size: 20px;
   margin-bottom: 16px;
   color: #1c1e21;
+  line-height: 1.3;
 }
 
 .product-detail-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .meta-item {
@@ -572,30 +843,28 @@ export default {
   margin-right: 6px;
 }
 
-.product-detail-description {
+.product-detail-actions {
+  display: flex;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
-.product-detail-description h4 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #1c1e21;
+.action-button {
+  flex: 1;
+  height: 40px;
+  font-size: 15px;
 }
 
-.product-detail-description p {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #1c1e21;
+.action-button i {
+  margin-right: 8px;
 }
 
 .product-detail-seller {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 24px;
-}
-
-.product-detail-seller h4 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #1c1e21;
+  margin-top: 24px;
 }
 
 .seller-info {
@@ -613,7 +882,7 @@ export default {
 
 .seller-name {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 15px;
   margin-bottom: 4px;
 }
 
@@ -627,17 +896,36 @@ export default {
   margin-right: 4px;
 }
 
-.product-detail-actions {
-  display: flex;
-  gap: 12px;
+.view-profile-button {
+  color: var(--esun-green);
+  font-size: 14px;
 }
 
-.action-button {
-  flex: 1;
+.view-profile-button i {
+  margin-left: 4px;
+  font-size: 12px;
 }
 
-.action-button i {
-  margin-right: 8px;
+.product-detail-description {
+  margin-top: 24px;
+}
+
+.product-detail-description h4 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #1c1e21;
+}
+
+.product-detail-description p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1c1e21;
+  white-space: pre-line;
+}
+
+/* 移动设备样式 */
+.mobile-hidden {
+  display: block;
 }
 
 @media screen and (max-width: 768px) {
@@ -659,6 +947,23 @@ export default {
   
   .product-details {
     flex-direction: column;
+  }
+  
+  .product-detail-left, 
+  .product-detail-right {
+    max-width: 100%;
+  }
+  
+  .main-product-image {
+    height: 300px;
+  }
+  
+  .mobile-hidden {
+    display: none;
+  }
+  
+  .product-detail-info {
+    padding: 16px;
   }
   
   .product-detail-gallery,

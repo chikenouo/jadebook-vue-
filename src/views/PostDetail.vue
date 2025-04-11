@@ -59,7 +59,7 @@
               <i class="fas fa-thumbs-up"></i> {{ post.likes || 0 }}
             </span>
             <span>
-              {{ post.comments?.length || 0 }} comments
+              {{ post.comments?.length || 0 }} 則留言
             </span>
           </div>
           
@@ -68,15 +68,15 @@
           <div class="post-buttons">
             <div class="action-button">
               <i class="fas fa-thumbs-up"></i>
-              <span>Like</span>
+              <span>讚</span>
             </div>
             <div class="action-button">
               <i class="fas fa-comment"></i>
-              <span>Comment</span>
+              <span>留言</span>
             </div>
             <div class="action-button">
               <i class="fas fa-share"></i>
-              <span>Share</span>
+              <span>分享</span>
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
       
       <!-- Comment Section -->
       <div class="comments-section">
-        <h3>Comments</h3>
+        <h3>留言</h3>
         
         <!-- Add Comment Form -->
         <div class="add-comment" v-if="isAuthenticated">
@@ -98,7 +98,7 @@
               v-model="newComment"
               type="textarea"
               :rows="2"
-              placeholder="Write a comment..."
+              placeholder="寫下你的留言..."
               @keyup.enter="addComment"
             />
             <el-button 
@@ -107,7 +107,7 @@
               @click="addComment" 
               :disabled="!newComment.trim()"
             >
-              Comment
+              發佈留言
             </el-button>
           </div>
         </div>
@@ -121,7 +121,7 @@
           />
         </div>
         <div v-else class="no-comments">
-          <p>No comments yet. Be the first to comment!</p>
+          <p>暫無留言。成為第一個留言的人吧！</p>
         </div>
       </div>
     </div>
@@ -129,14 +129,14 @@
     <!-- No Post Found -->
     <div v-else class="not-found">
       <i class="el-icon-document"></i>
-      <h3>Post Not Found</h3>
-      <p>The post you're looking for doesn't exist or has been removed.</p>
-      <el-button type="primary" @click="goHome">Go to Home</el-button>
+      <h3>貼文不存在</h3>
+      <p>您查找的貼文不存在或已被移除。</p>
+      <el-button type="primary" @click="goHome">返回首頁</el-button>
     </div>
     
     <!-- Edit Post Dialog -->
     <el-dialog
-      title="Edit Post"
+      title="編輯貼文"
       v-model="editDialogVisible"
       width="500px"
     >
@@ -146,29 +146,29 @@
             v-model="editForm.content"
             type="textarea"
             :rows="5"
-            placeholder="What's on your mind?"
+            placeholder="你在想什麼？"
           />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="editDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="saveEditedPost">Save</el-button>
+          <el-button @click="editDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="saveEditedPost">儲存</el-button>
         </span>
       </template>
     </el-dialog>
     
     <!-- Delete Confirmation Dialog -->
     <el-dialog
-      title="Delete Post"
+      title="刪除貼文"
       v-model="deleteDialogVisible"
       width="400px"
     >
-      <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+      <p>確定要刪除這則貼文嗎？此操作無法復原。</p>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="deleteDialogVisible = false">Cancel</el-button>
-          <el-button type="danger" @click="confirmDeletePost">Delete</el-button>
+          <el-button @click="deleteDialogVisible = false">取消</el-button>
+          <el-button type="danger" @click="confirmDeletePost">刪除</el-button>
         </span>
       </template>
     </el-dialog>
