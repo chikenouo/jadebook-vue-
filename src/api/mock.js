@@ -299,9 +299,114 @@ const mockPostsService = {
   }
 }
 
+// Mock users service
+const mockUsersService = {
+  update(userId, userData) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const userIndex = users.findIndex(u => u.id === userId);
+        if (userIndex === -1) {
+          reject(new Error('User not found'));
+          return;
+        }
+        
+        // Update user data
+        const updatedUser = {
+          ...users[userIndex],
+          ...userData,
+          // Don't allow changing id or password via this method
+          id: users[userIndex].id
+        };
+        
+        // Update the user in the users array
+        users[userIndex] = updatedUser;
+        
+        // Update the currentUser if this is the logged in user
+        if (mockAuthService.currentUser && mockAuthService.currentUser.id === userId) {
+          mockAuthService.currentUser = { ...updatedUser };
+          delete mockAuthService.currentUser.password;
+        }
+        
+        // Update author references in posts and comments
+        posts.forEach(post => {
+          if (post.authorId === userId) {
+            post.author = {
+              id: updatedUser.id,
+              name: updatedUser.name,
+              photo: updatedUser.photo
+            };
+          }
+          
+          post.comments.forEach(comment => {
+            if (comment.authorId === userId) {
+              comment.author = {
+                id: updatedUser.id,
+                name: updatedUser.name,
+                photo: updatedUser.photo
+              };
+            }
+          });
+        });
+        
+        resolve({
+          data: { ...updatedUser, password: undefined }
+        });
+      }, 500);
+    });
+  },
+  
+  updatePassword(currentPassword, newPassword) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (!mockAuthService.currentUser) {
+          reject(new Error('Not authenticated'));
+          return;
+        }
+        
+        const userIndex = users.findIndex(u => u.id === mockAuthService.currentUser.id);
+        if (userIndex === -1) {
+          reject(new Error('User not found'));
+          return;
+        }
+        
+        // Verify current password
+        if (users[userIndex].password !== currentPassword) {
+          reject(new Error('Current password is incorrect'));
+          return;
+        }
+        
+        // Update password
+        users[userIndex].password = newPassword;
+        
+        resolve({
+          data: { success: true }
+        });
+      }, 500);
+    });
+  },
+  
+  getById(id) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const user = users.find(u => u.id === id);
+        if (user) {
+          const userCopy = { ...user };
+          delete userCopy.password;
+          resolve({
+            data: userCopy
+          });
+        } else {
+          reject(new Error('User not found'));
+        }
+      }, 300);
+    });
+  }
+};
+
 export const mockServices = {
   auth: mockAuthService,
-  posts: mockPostsService
+  posts: mockPostsService,
+  users: mockUsersService
 }
 
 export default mockServices

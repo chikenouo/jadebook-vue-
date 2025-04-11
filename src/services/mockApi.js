@@ -160,6 +160,49 @@ const mockApi = {
     }
   },
   
+  // Users endpoints
+  users: {
+    update: async (userId, userData) => {
+      await delay(800);
+      // Update current user data
+      Object.assign(currentUser, userData);
+      
+      // Also update the user reference in posts
+      posts.forEach(post => {
+        if (post.authorId === userId) {
+          post.author.name = currentUser.name;
+          post.author.photo = currentUser.photo;
+        }
+        
+        post.comments.forEach(comment => {
+          if (comment.authorId === userId) {
+            comment.author.name = currentUser.name;
+            comment.author.photo = currentUser.photo;
+          }
+        });
+      });
+      
+      return {
+        data: { ...currentUser }
+      };
+    },
+    
+    updatePassword: async (currentPassword, newPassword) => {
+      await delay(600);
+      // Mock password validation 
+      if (currentPassword === 'wrongPassword') {
+        throw new Error('Current password is incorrect');
+      }
+      
+      // In a real app, you would hash the password
+      console.log('Password updated from', currentPassword, 'to', newPassword);
+      
+      return {
+        data: { success: true }
+      };
+    }
+  },
+  
   // Posts endpoints
   posts: {
     getAll: async () => {

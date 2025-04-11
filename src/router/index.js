@@ -7,6 +7,7 @@ import PostDetail from '../views/PostDetail.vue'
 import PostCreate from '../views/PostCreate.vue'
 import UserProfile from '../views/UserProfile.vue'
 import TestPage from '../views/TestPage.vue'
+import Settings from '../views/Settings.vue'
 import { isAuthenticated } from '../utils/auth'
 
 const routes = [
@@ -61,6 +62,12 @@ const routes = [
         component: UserProfile,
         meta: { requiresAuth: true },
         props: true
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: Settings,
+        meta: { requiresAuth: true }
       }
     ]
   },

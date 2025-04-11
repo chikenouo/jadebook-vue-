@@ -276,6 +276,44 @@ export default createStore({
       } finally {
         commit('SET_LOADING', false)
       }
+    },
+    
+    // User profile actions
+    async updateUserProfile({ commit }, { userId, userData }) {
+      try {
+        commit('SET_LOADING', true)
+        commit('SET_ERROR', null)
+        
+        // Call API to update user profile
+        const response = await apiService.users.update(userId, userData)
+        
+        // Update user in state
+        commit('SET_USER', response.data)
+        
+        return response
+      } catch (error) {
+        commit('SET_ERROR', error.response?.data?.message || 'Failed to update user profile')
+        throw error
+      } finally {
+        commit('SET_LOADING', false)
+      }
+    },
+    
+    async updatePassword({ commit }, { currentPassword, newPassword }) {
+      try {
+        commit('SET_LOADING', true)
+        commit('SET_ERROR', null)
+        
+        // Call API to update password
+        const response = await apiService.users.updatePassword(currentPassword, newPassword)
+        
+        return response
+      } catch (error) {
+        commit('SET_ERROR', error.response?.data?.message || 'Failed to update password')
+        throw error
+      } finally {
+        commit('SET_LOADING', false)
+      }
     }
   }
 })

@@ -95,14 +95,21 @@ const apiService = {
   users: {
     getById: (id) => {
       if (USE_MOCK) {
-        const user = mockServices.auth.users?.find(u => u.id === id)
-        return Promise.resolve(user)
+        return mockServices.users.getById(id)
       }
       return axios.get(`/user/${id}`)
     },
     update: (id, userData) => {
-      // Not implemented in mock yet
+      if (USE_MOCK) {
+        return mockServices.users.update(id, userData)
+      }
       return axios.put(`/user/${id}`, userData)
+    },
+    updatePassword: (currentPassword, newPassword) => {
+      if (USE_MOCK) {
+        return mockServices.users.updatePassword(currentPassword, newPassword)
+      }
+      return axios.put(`/user/password`, { currentPassword, newPassword })
     }
   }
 }

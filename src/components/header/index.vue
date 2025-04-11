@@ -110,7 +110,7 @@ export default {
           }
           break
         case 'settings':
-          // Navigate to settings page
+          this.$router.push('/settings')
           break
         case 'logout':
           this.$store.dispatch('logout')
