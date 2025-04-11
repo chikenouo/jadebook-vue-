@@ -8,6 +8,7 @@ import PostCreate from '../views/PostCreate.vue'
 import UserProfile from '../views/UserProfile.vue'
 import TestPage from '../views/TestPage.vue'
 import Settings from '../views/Settings.vue'
+import Marketplace from '../views/Marketplace.vue'
 import { isAuthenticated } from '../utils/auth'
 
 const routes = [
@@ -67,6 +68,12 @@ const routes = [
         path: 'settings',
         name: 'Settings',
         component: Settings,
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'marketplace',
+        name: 'Marketplace',
+        component: Marketplace,
         meta: { requiresAuth: true }
       }
     ]

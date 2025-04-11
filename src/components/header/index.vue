@@ -24,18 +24,9 @@
         <router-link to="/" class="nav-link" active-class="active">
           <i class="fas fa-home"></i>
         </router-link>
-        <div class="nav-link">
-          <i class="fas fa-user-friends"></i>
-        </div>
-        <div class="nav-link">
-          <i class="fas fa-tv"></i>
-        </div>
-        <div class="nav-link">
+        <router-link to="/marketplace" class="nav-link" active-class="active">
           <i class="fas fa-store"></i>
-        </div>
-        <div class="nav-link">
-          <i class="fas fa-users"></i>
-        </div>
+        </router-link>
       </div>
     </div>
     
