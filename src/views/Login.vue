@@ -98,10 +98,14 @@ export default {
         await this.$refs.loginForm.validate()
         
         this.loading = true
+        // Mock login with credentials
         await this.$store.dispatch('login', this.loginForm)
+        // Redirect to home page
         this.$router.push('/')
       } catch (error) {
         console.error('Login error:', error)
+        // Show error message (from store or generic)
+        this.$message.error(this.$store.getters.error || 'Login failed. Please check your credentials.')
       } finally {
         this.loading = false
       }

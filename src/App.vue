@@ -1,6 +1,17 @@
 <template>
-  <router-view />
+  <div id="app">
+    <router-view />
+  </div>
 </template>
+
+<script>
+export default {
+  name: 'App',
+  mounted() {
+    console.log('App component mounted')
+  }
+}
+</script>
 
 <style>
 * {

@@ -6,9 +6,16 @@ import Home from '../views/Home.vue'
 import PostDetail from '../views/PostDetail.vue'
 import PostCreate from '../views/PostCreate.vue'
 import UserProfile from '../views/UserProfile.vue'
+import TestPage from '../views/TestPage.vue'
 import { isAuthenticated } from '../utils/auth'
 
 const routes = [
+  {
+    path: '/test',
+    name: 'Test',
+    component: TestPage,
+    meta: { requiresAuth: false }
+  },
   {
     path: '/login',
     name: 'Login',

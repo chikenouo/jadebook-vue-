@@ -5,13 +5,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-import mockApi from './services/mockApi'
+import apiService from './api'
 
-// For demo purposes, replace axios with mockApi
-const api = process.env.NODE_ENV === 'development' ? mockApi : axios;
-
-// If using real axios
-if (api === axios) {
+// Configure axios for real API use when not in development
+if (process.env.NODE_ENV !== 'development') {
   // Set base URL for all axios requests
   axios.defaults.baseURL = 'http://localhost:8000/api'
 
@@ -42,16 +39,14 @@ if (api === axios) {
   )
 }
 
-// Make api available globally
-window.$api = api;
-
 const app = createApp(App)
 
 app.use(ElementPlus)
 app.use(store)
 app.use(router)
 
-// Auto login for demo purposes
-store.dispatch('autoLogin').finally(() => {
-  app.mount('#app')
-})
+// Mount the app directly for now, debug auto-login later
+app.mount('#app')
+
+// Log to indicate app is mounted
+console.log('Vue app mounted')
