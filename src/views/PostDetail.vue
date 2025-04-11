@@ -218,11 +218,23 @@ export default {
   },
   created() {
     this.fetchPostDetails()
+    
+    // 监听路由变化，当路由参数改变时重新获取帖子详情
+    this.$watch(
+      () => this.$route.params.id,
+      (newId) => {
+        if (newId && newId !== this.postId) {
+          this.fetchPostDetails()
+        }
+      }
+    )
   },
   methods: {
     async fetchPostDetails() {
       try {
+        console.log('Fetching post with ID:', this.postId)
         await this.$store.dispatch('fetchPostById', this.postId)
+        console.log('Fetched post:', this.$store.getters.currentPost)
       } catch (error) {
         console.error('Error fetching post details:', error)
       }

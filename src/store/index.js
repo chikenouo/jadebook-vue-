@@ -247,14 +247,19 @@ export default createStore({
       }
     },
     
-    async addComment({ commit }, { postId, commentData }) {
+    async addComment({ commit, dispatch }, { postId, commentData }) {
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
+        console.log('Adding comment to post ID:', postId, 'with data:', commentData)
         const response = await apiService.comments.create(postId, commentData)
         commit('ADD_COMMENT', { postId, comment: response.data })
+        
+        // 重新获取帖子以确保评论列表是最新的
+        await dispatch('fetchPostById', postId)
         return response
       } catch (error) {
+        console.error('Failed to add comment:', error)
         commit('SET_ERROR', error.response?.data?.message || 'Failed to add comment')
         throw error
       } finally {

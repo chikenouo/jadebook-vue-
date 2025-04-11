@@ -192,60 +192,62 @@ const mockPostsService = {
   },
 
   getPostById(id) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
-        // Make sure to convert string IDs for comparison
-        const post = posts.find(p => p.id === id.toString())
-        if (post) {
-          // Return a deep copy with all associated objects
-          const postCopy = JSON.parse(JSON.stringify(post))
-          
-          // Ensure author data is populated
-          if (postCopy.authorId) {
-            const author = users.find(u => u.id === postCopy.authorId)
-            if (author) {
-              postCopy.author = { ...author }
-              delete postCopy.author.password
-            }
-          }
-          
-          // Ensure comment authors are populated
-          if (postCopy.comments && postCopy.comments.length > 0) {
-            postCopy.comments.forEach(comment => {
-              if (comment.authorId) {
-                const commentAuthor = users.find(u => u.id === comment.authorId)
-                if (commentAuthor) {
-                  comment.author = { ...commentAuthor }
-                  delete comment.author.password
-                }
-              }
-            })
-          }
-          
-          resolve({
-            data: postCopy
-          })
-        } else {
-          // Create an empty post if not found (for development only)
-          const defaultPost = {
-            id: id.toString(),
+        console.log('Looking for post with ID:', id);
+        
+        // 确保ID是字符串类型进行比较
+        const stringId = String(id);
+        let post = posts.find(p => String(p.id) === stringId);
+        
+        // 如果找不到帖子，创建一个默认帖子（仅用于开发目的）
+        if (!post) {
+          console.log('Post not found, creating a default post');
+          post = {
+            id: stringId,
             authorId: '1',
-            author: { ...users[0], password: undefined },
-            content: 'This is a sample post created for demonstration purposes.',
+            author: { ...users[0] },
+            content: '这是一个示例帖子，用于测试目的。',
             createdAt: new Date().toISOString(),
             likes: 0,
             comments: []
-          }
+          };
           
-          // Add to posts array for future reference
-          posts.push(defaultPost)
-          
-          resolve({
-            data: defaultPost
-          })
+          // 保存到帖子数组中以供将来参考
+          posts.push(post);
         }
-      }, 300)
-    })
+        
+        // 创建深拷贝以避免修改原始数据
+        const postCopy = JSON.parse(JSON.stringify(post));
+        
+        // 确保作者数据已填充
+        if (postCopy.authorId) {
+          const author = users.find(u => String(u.id) === String(postCopy.authorId));
+          if (author) {
+            postCopy.author = { ...author };
+            delete postCopy.author.password;
+          }
+        }
+        
+        // 确保评论作者数据已填充
+        if (postCopy.comments && postCopy.comments.length > 0) {
+          postCopy.comments.forEach(comment => {
+            if (comment.authorId) {
+              const commentAuthor = users.find(u => String(u.id) === String(comment.authorId));
+              if (commentAuthor) {
+                comment.author = { ...commentAuthor };
+                delete comment.author.password;
+              }
+            }
+          });
+        }
+        
+        console.log('Returning post:', postCopy);
+        resolve({
+          data: postCopy
+        });
+      }, 300);
+    });
   },
 
   createPost(postData) {
@@ -307,40 +309,60 @@ const mockPostsService = {
   addComment(postId, commentData) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        let post = posts.find(p => p.id === postId.toString())
+        console.log('Adding comment to post with ID:', postId, 'with data:', commentData);
         
-        // If post doesn't exist, create it (for development purposes only)
+        // 确保ID是字符串类型
+        const stringId = String(postId);
+        
+        // 查找帖子
+        let post = posts.find(p => String(p.id) === stringId);
+        
+        // 如果帖子不存在，创建一个新帖子
         if (!post) {
+          console.log('Post not found, creating a default post for the comment');
           post = {
-            id: postId.toString(),
-            authorId: '1', // Default to first user
-            author: { ...users[0], password: undefined },
-            content: 'This is a sample post created for demonstration purposes.',
+            id: stringId,
+            authorId: '1', // 默认为第一个用户
+            author: { ...users[0] },
+            content: '这是一个示例帖子，用于测试留言功能。',
             createdAt: new Date().toISOString(),
             likes: 0,
             comments: []
-          }
-          posts.push(post)
+          };
+          posts.push(post);
         }
         
-        // Create the new comment
+        // 确保当前用户存在
+        if (!mockAuthService.currentUser) {
+          reject(new Error('User not authenticated'));
+          return;
+        }
+        
+        // 创建新留言
         const newComment = {
           id: String(post.comments.length + 1),
-          postId: postId.toString(),
+          postId: stringId,
           authorId: mockAuthService.currentUser.id,
-          author: { ...mockAuthService.currentUser },
+          author: { 
+            id: mockAuthService.currentUser.id,
+            name: mockAuthService.currentUser.name,
+            photo: mockAuthService.currentUser.photo 
+          },
           content: commentData.content,
           createdAt: new Date().toISOString()
-        }
+        };
         
-        // Add the comment to the post
-        post.comments.push(newComment)
+        // 添加留言到帖子
+        post.comments.push(newComment);
+        
+        console.log('Added new comment:', newComment);
+        console.log('Updated post now has comments:', post.comments.length);
         
         resolve({
           data: newComment
-        })
-      }, 300)
-    })
+        });
+      }, 300);
+    });
   },
 
   getUserPosts(userId) {
