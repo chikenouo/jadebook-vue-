@@ -36,19 +36,44 @@ body {
   padding: 0 16px;
 }
 
-/* Facebook-like blue color */
+/* 台灣玉山銀行的童話松柏綠色 */
+:root {
+  --esun-green: #007550;      /* 主要綠色 */
+  --esun-green-light: #009464; /* 較淺綠色，用於懸停效果 */
+  --esun-green-dark: #005c3f;  /* 深綠色，用於重點強調 */
+  --esun-text-on-green: #ffffff; /* 在綠色背景上的文字顏色 */
+  --esun-accent: #e6b31e;      /* 輔助色（金色），用於強調和按鈕 */
+}
+
+.esun-green {
+  color: var(--esun-green);
+}
+
+.bg-esun-green {
+  background-color: var(--esun-green);
+}
+
+.esun-accent {
+  color: var(--esun-accent);
+}
+
+.bg-esun-accent {
+  background-color: var(--esun-accent);
+}
+
+/* 原來的藍色樣式（保留但改為綠色） */
 .fb-blue {
-  color: #1877f2;
+  color: var(--esun-green);
 }
 
 .bg-fb-blue {
-  background-color: #1877f2;
+  background-color: var(--esun-green);
 }
 
-/* Common button styling */
+/* 通用按鈕樣式 */
 .custom-button {
-  background-color: #1877f2;
-  color: white;
+  background-color: var(--esun-green);
+  color: var(--esun-text-on-green);
   border: none;
   border-radius: 6px;
   font-weight: bold;
@@ -56,7 +81,7 @@ body {
 }
 
 .custom-button:hover {
-  background-color: #166fe5;
+  background-color: var(--esun-green-light);
 }
 
 /* Card styling */

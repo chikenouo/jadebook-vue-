@@ -11,14 +11,16 @@
     >
       <!-- 頭像設定 -->
       <div class="avatar-section">
-        <img 
-          :src="form.photo || require('@/assets/defaultAvatar.svg')" 
-          alt="Profile" 
-          class="avatar"
-        >
+        <div class="avatar-container">
+          <img 
+            :src="form.photo || require('@/assets/defaultAvatar.svg')" 
+            alt="Profile" 
+            class="avatar"
+          >
+        </div>
         <div class="avatar-actions">
-          <el-button size="small" type="primary">更換頭像</el-button>
-          <el-button v-if="form.photo" size="small" type="danger" @click="removeAvatar">移除頭像</el-button>
+          <el-button size="small" type="primary" class="avatar-btn">更換頭像</el-button>
+          <el-button v-if="form.photo" size="small" type="danger" class="avatar-btn" @click="removeAvatar">移除頭像</el-button>
         </div>
       </div>
       
@@ -272,7 +274,7 @@ export default {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 24px;
-  color: #1877f2;
+  color: var(--esun-green);
 }
 
 .settings-form {
@@ -284,23 +286,35 @@ export default {
 
 .avatar-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
-  gap: 20px;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .avatar {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #ddd;
+  border: 2px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-actions {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  gap: 15px;
+}
+
+.avatar-btn {
+  min-width: 100px;
 }
 
 .form-hint {

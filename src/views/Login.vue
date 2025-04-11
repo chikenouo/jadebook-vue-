@@ -3,7 +3,7 @@
     <div class="login-box">
       <div class="login-header">
         <img src="@/assets/logo.svg" alt="Logo" class="logo">
-        <h2 class="title">Log in to Facebook</h2>
+        <h2 class="title">登入社群平台</h2>
       </div>
       
       <el-form 
@@ -16,7 +16,7 @@
         <el-form-item prop="phoneNumber">
           <el-input
             v-model="loginForm.phoneNumber"
-            placeholder="Phone number"
+            placeholder="請輸入手機號碼"
             prefix-icon="el-icon-mobile-phone"
             size="large"
           />
@@ -25,7 +25,7 @@
         <el-form-item prop="password">
           <el-input
             v-model="loginForm.password"
-            placeholder="Password"
+            placeholder="請輸入密碼"
             type="password"
             prefix-icon="el-icon-lock"
             size="large"
@@ -41,12 +41,12 @@
             size="large"
             class="login-button"
           >
-            Log In
+            登入
           </el-button>
         </el-form-item>
         
         <div class="divider">
-          <span>or</span>
+          <span>或</span>
         </div>
         
         <el-button
@@ -54,7 +54,7 @@
           @click="goToRegister"
           size="large"
         >
-          Create New Account
+          註冊新帳號
         </el-button>
       </el-form>
       
@@ -76,12 +76,12 @@ export default {
       },
       rules: {
         phoneNumber: [
-          { required: true, message: 'Please enter your phone number', trigger: 'blur' },
-          { pattern: /^[0-9]{10}$/, message: 'Please enter a valid 10-digit phone number', trigger: 'blur' }
+          { required: true, message: '請輸入您的手機號碼', trigger: 'blur' },
+          { pattern: /^[0-9]{10}$/, message: '請輸入有效的10位數手機號碼', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Please enter your password', trigger: 'blur' },
-          { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' }
+          { required: true, message: '請輸入您的密碼', trigger: 'blur' },
+          { min: 6, message: '密碼長度不能少於6個字符', trigger: 'blur' }
         ]
       },
       loading: false
@@ -159,16 +159,16 @@ export default {
 
 .login-button {
   width: 100%;
-  background-color: #1877f2;
-  border-color: #1877f2;
+  background-color: var(--esun-green);
+  border-color: var(--esun-green);
   font-weight: bold;
   font-size: 16px;
   height: 48px;
 }
 
 .login-button:hover {
-  background-color: #166fe5;
-  border-color: #166fe5;
+  background-color: var(--esun-green-light);
+  border-color: var(--esun-green-light);
 }
 
 .divider {

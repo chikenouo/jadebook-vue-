@@ -199,7 +199,7 @@ export default {
 }
 
 .nav-link.active {
-  color: #1877f2;
+  color: var(--esun-green);
 }
 
 .nav-link.active::after {
@@ -209,7 +209,7 @@ export default {
   left: 0;
   right: 0;
   height: 3px;
-  background-color: #1877f2;
+  background-color: var(--esun-green);
 }
 
 .nav-link:hover:not(.active) {
