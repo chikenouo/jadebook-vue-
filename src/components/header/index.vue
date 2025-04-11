@@ -68,13 +68,10 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="profile">
-              <i class="fas fa-user"></i> My Profile
-            </el-dropdown-item>
-            <el-dropdown-item command="settings">
-              <i class="fas fa-cog"></i> Settings
+              <i class="fas fa-user"></i> 個人檔案
             </el-dropdown-item>
             <el-dropdown-item divided command="logout">
-              <i class="fas fa-sign-out-alt"></i> Logout
+              <i class="fas fa-sign-out-alt"></i> 登出
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -189,7 +186,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #65676b;
+  color: var(--esun-green-dark);
   border-radius: 8px;
   cursor: pointer;
 }
@@ -226,7 +223,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #e4e6eb;
+  background-color: rgba(0, 117, 80, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -235,11 +232,11 @@ export default {
 
 .icon-button i {
   font-size: 18px;
-  color: #050505;
+  color: var(--esun-green);
 }
 
 .icon-button:hover {
-  background-color: #d8dadf;
+  background-color: rgba(0, 117, 80, 0.2);
 }
 
 .user-profile {

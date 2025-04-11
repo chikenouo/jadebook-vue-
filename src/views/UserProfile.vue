@@ -26,8 +26,8 @@
       </div>
       
       <div class="nav-actions" v-if="isCurrentUser">
-        <el-button type="primary" size="small">
-          <i class="fas fa-pencil-alt"></i> Edit Profile
+        <el-button type="primary" size="small" @click="openEditProfileModal">
+          <i class="fas fa-pencil-alt"></i> 編輯個人資料
         </el-button>
       </div>
     </div>
@@ -94,6 +94,77 @@
         </div>
       </div>
     </div>
+    
+    <!-- Edit Profile Modal -->
+    <el-dialog
+      v-model="editProfileModalVisible"
+      title="編輯個人資料"
+      width="500px"
+      destroy-on-close
+    >
+      <el-form 
+        ref="profileForm" 
+        :model="profileForm" 
+        :rules="formRules"
+        label-width="100px"
+      >
+        <div class="edit-profile-avatar">
+          <img 
+            :src="profileForm.photo || require('@/assets/defaultAvatar.svg')" 
+            alt="Avatar" 
+            class="edit-avatar"
+          >
+          <el-button 
+            type="primary" 
+            size="small" 
+            class="change-avatar-btn"
+          >
+            更換頭像
+          </el-button>
+          <input 
+            type="file" 
+            ref="fileInput"
+            style="display: none;"
+            accept="image/*"
+            @change="handleAvatarChange"
+          >
+        </div>
+        
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="profileForm.name" />
+        </el-form-item>
+        
+        <el-form-item label="電子郵件" prop="email">
+          <el-input v-model="profileForm.email" />
+        </el-form-item>
+        
+        <el-form-item label="手機號碼" prop="phoneNumber">
+          <el-input v-model="profileForm.phoneNumber" disabled />
+          <div class="form-hint">手機號碼無法修改</div>
+        </el-form-item>
+        
+        <el-form-item label="自我介紹" prop="bio">
+          <el-input 
+            v-model="profileForm.bio"
+            type="textarea"
+            :rows="4"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="editProfileModalVisible = false">取消</el-button>
+          <el-button 
+            type="primary" 
+            @click="saveProfile"
+            :loading="updating"
+          >
+            儲存
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -108,7 +179,25 @@ export default {
   data() {
     return {
       profileUser: null,
-      userPosts: []
+      userPosts: [],
+      editProfileModalVisible: false,
+      profileForm: {
+        name: '',
+        email: '',
+        phoneNumber: '',
+        bio: '',
+        photo: ''
+      },
+      formRules: {
+        name: [
+          { required: true, message: '請輸入姓名', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '請輸入電子郵件', trigger: 'blur' },
+          { type: 'email', message: '請輸入有效的電子郵件格式', trigger: 'blur' }
+        ]
+      },
+      updating: false
     }
   },
   computed: {
@@ -197,7 +286,7 @@ export default {
 
 .cover-photo {
   height: 200px;
-  background-color: #1877f2;
+  background-color: var(--esun-green);
   border-radius: 8px 8px 0 0;
   position: relative;
   margin-bottom: 60px;
@@ -260,8 +349,8 @@ export default {
 }
 
 .nav-link.active {
-  color: #1877f2;
-  border-bottom-color: #1877f2;
+  color: var(--esun-green);
+  border-bottom-color: var(--esun-green);
 }
 
 .nav-link:hover:not(.active) {
