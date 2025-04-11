@@ -1,6 +1,9 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 
+// Use the global API (mockApi or axios) depending on environment
+const api = window.$api || axios;
+
 export default createStore({
   state: {
     user: null,
@@ -81,12 +84,36 @@ export default createStore({
     }
   },
   actions: {
+    // Auto login for demo purposes
+    async autoLogin({ commit, dispatch }) {
+      try {
+        // For demonstration only - automatically log in with mock data
+        if (process.env.NODE_ENV === 'development') {
+          commit('SET_LOADING', true)
+          commit('SET_ERROR', null)
+          
+          const response = await api.auth.login()
+          const { token, user } = response.data
+          
+          commit('SET_TOKEN', token)
+          commit('SET_USER', user)
+          
+          // Fetch posts after login
+          await dispatch('fetchPosts')
+        }
+      } catch (error) {
+        console.error('Auto login failed:', error)
+      } finally {
+        commit('SET_LOADING', false)
+      }
+    },
+    
     // Authentication actions
     async register({ commit, dispatch }, userData) {
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.post('/auth/register', userData)
+        const response = await api.auth.register(userData)
         const { token, user } = response.data
         commit('SET_TOKEN', token)
         commit('SET_USER', user)
@@ -99,14 +126,18 @@ export default createStore({
       }
     },
     
-    async login({ commit }, credentials) {
+    async login({ commit, dispatch }, credentials) {
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.post('/auth/login', credentials)
+        const response = await api.auth.login(credentials)
         const { token, user } = response.data
         commit('SET_TOKEN', token)
         commit('SET_USER', user)
+        
+        // Fetch posts after login
+        await dispatch('fetchPosts')
+        
         return response
       } catch (error) {
         commit('SET_ERROR', error.response?.data?.message || 'Login failed')
@@ -119,7 +150,7 @@ export default createStore({
     async fetchCurrentUser({ commit }) {
       try {
         commit('SET_LOADING', true)
-        const response = await axios.get('/user/me')
+        const response = await api.auth.getCurrentUser()
         commit('SET_USER', response.data)
         return response
       } catch (error) {
@@ -142,7 +173,7 @@ export default createStore({
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.get('/posts')
+        const response = await api.posts.getAll()
         commit('SET_POSTS', response.data)
         return response
       } catch (error) {
@@ -157,7 +188,7 @@ export default createStore({
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.get(`/posts/${postId}`)
+        const response = await api.posts.getById(postId)
         commit('SET_CURRENT_POST', response.data)
         return response
       } catch (error) {
@@ -172,7 +203,7 @@ export default createStore({
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.post('/posts', postData)
+        const response = await api.posts.create(postData)
         commit('ADD_POST', response.data)
         return response
       } catch (error) {
@@ -187,7 +218,7 @@ export default createStore({
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.put(`/posts/${postId}`, postData)
+        const response = await api.posts.update(postId, postData)
         commit('UPDATE_POST', response.data)
         return response
       } catch (error) {
@@ -202,7 +233,7 @@ export default createStore({
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        await axios.delete(`/posts/${postId}`)
+        await api.posts.delete(postId)
         commit('DELETE_POST', postId)
       } catch (error) {
         commit('SET_ERROR', error.response?.data?.message || 'Failed to delete post')
@@ -216,7 +247,7 @@ export default createStore({
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.post(`/posts/${postId}/comments`, commentData)
+        const response = await api.comments.create(postId, commentData)
         commit('ADD_COMMENT', { postId, comment: response.data })
         return response
       } catch (error) {
@@ -231,9 +262,10 @@ export default createStore({
       try {
         commit('SET_LOADING', true)
         commit('SET_ERROR', null)
-        const response = await axios.get(`/user/${userId}/posts`)
-        commit('SET_POSTS', response.data)
-        return response
+        const response = await api.posts.getAll() // Using all posts since we're mocking
+        const userPosts = response.data.filter(post => post.authorId === userId)
+        commit('SET_POSTS', userPosts)
+        return { data: userPosts }
       } catch (error) {
         commit('SET_ERROR', error.response?.data?.message || 'Failed to fetch user posts')
         throw error

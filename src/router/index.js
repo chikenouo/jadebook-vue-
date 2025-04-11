@@ -32,6 +32,10 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'home',
+        redirect: { name: 'Home' }  // Redirect /home to /
+      },
+      {
         path: 'post/create',
         name: 'PostCreate',
         component: PostCreate,
@@ -41,15 +45,22 @@ const routes = [
         path: 'post/:id',
         name: 'PostDetail',
         component: PostDetail,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
+        props: true
       },
       {
         path: 'user/:id',
         name: 'UserProfile',
         component: UserProfile,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
+        props: true
       }
     ]
+  },
+  // Catch-all route for 404 pages
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: { name: 'Home' }
   }
 ]
 
@@ -60,6 +71,12 @@ const router = createRouter({
 
 // Navigation guard to check authentication
 router.beforeEach((to, from, next) => {
+  // For demo purposes, allow all routes in development mode
+  if (process.env.NODE_ENV === 'development') {
+    next()
+    return
+  }
+  
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!isAuthenticated()) {
       next({ name: 'Login' })
