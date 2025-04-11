@@ -106,9 +106,6 @@ export default {
             this.$router.push(`/user/${this.currentUser.id}`)
           }
           break
-        case 'settings':
-          this.$router.push('/settings')
-          break
         case 'logout':
           this.$store.dispatch('logout')
           this.$router.push('/login')

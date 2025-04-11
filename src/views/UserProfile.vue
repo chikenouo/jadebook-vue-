@@ -118,6 +118,7 @@
             type="primary" 
             size="small" 
             class="change-avatar-btn"
+            @click="$refs.fileInput.click()"
           >
             更換頭像
           </el-button>
@@ -273,6 +274,68 @@ export default {
       } catch (error) {
         this.$message.error('Failed to delete post')
         console.error('Error deleting post:', error)
+      }
+    },
+    
+    openEditProfileModal() {
+      // Initialize form with current user data
+      this.profileForm = {
+        name: this.profileUser?.name || '',
+        email: this.profileUser?.email || '',
+        phoneNumber: this.profileUser?.phoneNumber || '',
+        bio: this.profileUser?.bio || '',
+        photo: this.profileUser?.photo || ''
+      }
+      this.editProfileModalVisible = true
+    },
+    
+    handleAvatarChange(e) {
+      const file = e.target.files[0]
+      if (!file) return
+      
+      // In a real app, you would upload the file to a server
+      // For now, we'll use a FileReader to create a data URL
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.profileForm.photo = e.target.result
+      }
+      reader.readAsDataURL(file)
+    },
+    
+    async saveProfile() {
+      try {
+        await this.$refs.profileForm.validate()
+        
+        this.updating = true
+        
+        // In a real app, this would be an API call
+        // For demo, we'll update the store directly
+        await this.$store.dispatch('updateUserProfile', {
+          userId: this.currentUser.id,
+          userData: {
+            name: this.profileForm.name,
+            email: this.profileForm.email,
+            bio: this.profileForm.bio,
+            photo: this.profileForm.photo
+          }
+        })
+        
+        // Update local profileUser object
+        this.profileUser = {
+          ...this.profileUser,
+          name: this.profileForm.name,
+          email: this.profileForm.email,
+          bio: this.profileForm.bio,
+          photo: this.profileForm.photo
+        }
+        
+        this.$message.success('個人資料已更新')
+        this.editProfileModalVisible = false
+      } catch (error) {
+        this.$message.error('更新個人資料失敗')
+        console.error('Error updating profile:', error)
+      } finally {
+        this.updating = false
       }
     }
   }
@@ -477,5 +540,37 @@ export default {
   .profile-info {
     bottom: -30px;
   }
+}
+
+.edit-profile-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.edit-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  background-color: white;
+  border: 1px solid #e4e6eb;
+}
+
+.change-avatar-btn {
+  margin-top: 10px;
+}
+
+.form-hint {
+  font-size: 12px;
+  color: #8a8d91;
+  margin-top: 5px;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
