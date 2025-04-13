@@ -1,116 +1,104 @@
+<!-- sidebar.vue -->
 <template>
   <div class="sidebar-container">
     <!-- User Section -->
     <div class="sidebar-section" v-if="currentUser">
-      <router-link 
-        :to="`/user/${currentUser.id}`" 
+      <router-link
+        :to="`/user/${currentUser.id}`"
         class="sidebar-item"
         active-class="active"
       >
-        <img 
-          :src="currentUser.photo || require('@/assets/defaultAvatar.svg')" 
-          alt="Profile" 
+        <img
+          :src="currentUser.photo || defaultAvatar"
+          alt="Profile"
           class="sidebar-avatar"
-        >
-        <span>{{ currentUser.name }}</span>
+        />
+        <span>{{ currentUser.userName }}</span>
       </router-link>
     </div>
-    
+
     <!-- Main Navigation -->
     <div class="sidebar-section">
       <router-link to="/" class="sidebar-item" exact-active-class="active">
         <i class="fas fa-home"></i>
-        <span>Home</span>
+        <span>首頁</span>
       </router-link>
-      
+
       <div class="sidebar-item">
         <i class="fas fa-user-friends"></i>
-        <span>Friends</span>
+        <span>朋友</span>
       </div>
-      
+
       <div class="sidebar-item">
         <i class="fas fa-users"></i>
-        <span>Groups</span>
+        <span>社團</span>
       </div>
-      
+
       <div class="sidebar-item">
         <i class="fas fa-store"></i>
         <span>Marketplace</span>
       </div>
-      
+
       <div class="sidebar-item">
         <i class="fas fa-tv"></i>
-        <span>Watch</span>
+        <span>影片</span>
       </div>
-      
+
       <div class="sidebar-item">
         <i class="fas fa-bookmark"></i>
-        <span>Saved</span>
-      </div>
-      
-      <div class="sidebar-item">
-        <i class="fas fa-flag"></i>
-        <span>Pages</span>
-      </div>
-      
-      <div class="sidebar-item">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Events</span>
-      </div>
-      
-      <div class="sidebar-item">
-        <i class="fas fa-history"></i>
-        <span>Memories</span>
+        <span>典藏</span>
       </div>
     </div>
-    
+
     <!-- Shortcuts Section -->
     <div class="sidebar-section">
       <div class="section-header">
-        <h3>Your Shortcuts</h3>
+        <h3>捷徑</h3>
         <span class="edit-link">Edit</span>
       </div>
-      
+
       <div class="sidebar-item">
         <i class="fas fa-gamepad"></i>
-        <span>Games</span>
+        <span>遊戲</span>
       </div>
-      
+
       <div class="sidebar-item">
         <i class="fas fa-images"></i>
-        <span>Photos</span>
-      </div>
-      
-      <div class="sidebar-item">
-        <i class="fas fa-video"></i>
-        <span>Videos</span>
+        <span>相片</span>
       </div>
     </div>
-    
+
     <!-- Footer -->
     <div class="sidebar-footer">
       <div class="footer-links">
-        <a href="#">Privacy</a> · 
-        <a href="#">Terms</a> · 
-        <a href="#">Advertising</a> · 
+        <a href="#">Privacy</a> · <a href="#">Terms</a> ·
+        <a href="#">Advertising</a> ·
         <a href="#">Cookies</a>
       </div>
-      <div class="copyright">
-        Facebook Clone © {{ new Date().getFullYear() }}
-      </div>
+      <div class="copyright">JadeBook © {{ new Date().getFullYear() }}</div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SidebarComponent',
-  computed: {
-    currentUser() {
-      return this.$store.getters.currentUser
-    }
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from '@/api/request'
+import defaultAvatar from '@/assets/defaultAvatar.svg'
+
+const currentUser = ref(null)
+
+// 獲取當前用戶資料
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/user/me', {
+      withCredentials: true,
+    })
+    currentUser.value = response.data
+  } catch (error) {
+    console.error('Error fetching current user:', error)
+    currentUser.value = null
   }
-}
+})
 </script>
 
 <style scoped>

@@ -4,12 +4,12 @@
     <div class="back-button-container">
       <el-button icon="el-icon-arrow-left" @click="goBack">Back</el-button>
     </div>
-    
+
     <!-- Loading State -->
     <div v-if="loading" class="loading-container">
       <el-skeleton :rows="10" animated />
     </div>
-    
+
     <!-- Error State -->
     <div v-else-if="error" class="error-container">
       <i class="el-icon-warning-outline"></i>
@@ -17,54 +17,58 @@
       <p>{{ error }}</p>
       <el-button @click="fetchPostDetails">Try Again</el-button>
     </div>
-    
+
     <!-- Post Content -->
     <div v-else-if="post" class="post-content">
       <!-- Post Card -->
       <div class="post-card">
         <div class="post-header">
           <div class="user-info">
-            <img 
-              :src="post.author?.photo || require('@/assets/defaultAvatar.svg')" 
-              alt="Profile" 
+            <img
+              :src="post.author?.photo || require('@/assets/defaultAvatar.svg')"
+              alt="Profile"
               class="avatar"
-            >
+            />
             <div>
-              <div class="username">{{ post.author?.name || 'Unknown User' }}</div>
+              <div class="username">
+                {{ post.author?.name || 'Unknown User' }}
+              </div>
               <div class="post-time">{{ formatDate(post.createdAt) }}</div>
             </div>
           </div>
-          
+
           <!-- Post Actions (Edit/Delete) -->
           <div class="post-actions" v-if="isCurrentUserPost">
             <el-dropdown trigger="click">
               <i class="el-icon-more"></i>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="editPost">Edit Post</el-dropdown-item>
-                  <el-dropdown-item @click="deletePost">Delete Post</el-dropdown-item>
+                  <el-dropdown-item @click="editPost"
+                    >Edit Post</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="deletePost"
+                    >Delete Post</el-dropdown-item
+                  >
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
           </div>
         </div>
-        
+
         <div class="post-body">
           <p>{{ post.content }}</p>
         </div>
-        
+
         <div class="post-footer">
           <div class="post-stats">
             <span>
               <i class="fas fa-thumbs-up"></i> {{ post.likes || 0 }}
             </span>
-            <span>
-              {{ post.comments?.length || 0 }} 則留言
-            </span>
+            <span> {{ post.comments?.length || 0 }} 則留言 </span>
           </div>
-          
+
           <el-divider />
-          
+
           <div class="post-buttons">
             <div class="action-button">
               <i class="fas fa-thumbs-up"></i>
@@ -81,18 +85,18 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Comment Section -->
       <div class="comments-section">
         <h3>留言</h3>
-        
+
         <!-- Add Comment Form -->
         <div class="add-comment" v-if="isAuthenticated">
-          <img 
-            :src="currentUser?.photo || require('@/assets/defaultAvatar.svg')" 
-            alt="Profile" 
+          <img
+            :src="currentUser?.photo || require('@/assets/defaultAvatar.svg')"
+            alt="Profile"
             class="avatar"
-          >
+          />
           <div class="comment-input">
             <el-input
               v-model="newComment"
@@ -101,23 +105,26 @@
               placeholder="寫下你的留言..."
               @keyup.enter="addComment"
             />
-            <el-button 
-              type="primary" 
-              size="small" 
-              @click="addComment" 
+            <el-button
+              type="primary"
+              size="small"
+              @click="addComment"
               :disabled="!newComment.trim()"
             >
               發佈留言
             </el-button>
           </div>
         </div>
-        
+
         <!-- Comments List -->
-        <div v-if="post.comments && post.comments.length > 0" class="comments-list">
-          <CommentComponent 
-            v-for="comment in post.comments" 
-            :key="comment.id" 
-            :comment="comment" 
+        <div
+          v-if="post.comments && post.comments.length > 0"
+          class="comments-list"
+        >
+          <CommentComponent
+            v-for="comment in post.comments"
+            :key="comment.id"
+            :comment="comment"
           />
         </div>
         <div v-else class="no-comments">
@@ -125,7 +132,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- No Post Found -->
     <div v-else class="not-found">
       <i class="el-icon-document"></i>
@@ -133,13 +140,9 @@
       <p>您查找的貼文不存在或已被移除。</p>
       <el-button type="primary" @click="goHome">返回首頁</el-button>
     </div>
-    
+
     <!-- Edit Post Dialog -->
-    <el-dialog
-      title="編輯貼文"
-      v-model="editDialogVisible"
-      width="500px"
-    >
+    <el-dialog title="編輯貼文" v-model="editDialogVisible" width="500px">
       <el-form :model="editForm" @submit.prevent="saveEditedPost">
         <el-form-item>
           <el-input
@@ -157,13 +160,9 @@
         </span>
       </template>
     </el-dialog>
-    
+
     <!-- Delete Confirmation Dialog -->
-    <el-dialog
-      title="刪除貼文"
-      v-model="deleteDialogVisible"
-      width="400px"
-    >
+    <el-dialog title="刪除貼文" v-model="deleteDialogVisible" width="400px">
       <p>確定要刪除這則貼文嗎？此操作無法復原。</p>
       <template #footer>
         <span class="dialog-footer">
@@ -181,7 +180,7 @@ import CommentComponent from '@/components/comment/index.vue'
 export default {
   name: 'PostDetailView',
   components: {
-    CommentComponent
+    CommentComponent,
   },
   data() {
     return {
@@ -189,8 +188,8 @@ export default {
       editDialogVisible: false,
       deleteDialogVisible: false,
       editForm: {
-        content: ''
-      }
+        content: '',
+      },
     }
   },
   computed: {
@@ -213,12 +212,16 @@ export default {
       return this.$store.getters.error
     },
     isCurrentUserPost() {
-      return this.post && this.currentUser && this.post.authorId === this.currentUser.id
-    }
+      return (
+        this.post &&
+        this.currentUser &&
+        this.post.authorId === this.currentUser.id
+      )
+    },
   },
   created() {
     this.fetchPostDetails()
-    
+
     // 监听路由变化，当路由参数改变时重新获取帖子详情
     this.$watch(
       () => this.$route.params.id,
@@ -241,14 +244,14 @@ export default {
     },
     formatDate(dateString) {
       if (!dateString) return 'Unknown date'
-      
+
       const date = new Date(dateString)
       const now = new Date()
       const diffMs = now - date
       const diffMins = Math.floor(diffMs / (1000 * 60))
       const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-      
+
       if (diffMins < 60) {
         return diffMins === 0 ? 'Just now' : `${diffMins}m ago`
       } else if (diffHours < 24) {
@@ -261,11 +264,11 @@ export default {
     },
     async addComment() {
       if (!this.newComment.trim()) return
-      
+
       try {
         await this.$store.dispatch('addComment', {
           postId: this.postId,
-          commentData: { content: this.newComment }
+          commentData: { content: this.newComment },
         })
         this.newComment = ''
       } catch (error) {
@@ -279,11 +282,11 @@ export default {
     },
     async saveEditedPost() {
       if (!this.editForm.content.trim()) return
-      
+
       try {
         await this.$store.dispatch('updatePost', {
           postId: this.postId,
-          postData: { content: this.editForm.content }
+          postData: { content: this.editForm.content },
         })
         this.editDialogVisible = false
         this.$message.success('Post updated successfully')
@@ -311,8 +314,8 @@ export default {
     },
     goHome() {
       this.$router.push('/')
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -326,7 +329,9 @@ export default {
   margin-bottom: 20px;
 }
 
-.loading-container, .error-container, .not-found {
+.loading-container,
+.error-container,
+.not-found {
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -335,19 +340,22 @@ export default {
   margin-bottom: 20px;
 }
 
-.error-container i, .not-found i {
+.error-container i,
+.not-found i {
   font-size: 48px;
   color: #bcc0c4;
   margin-bottom: 20px;
 }
 
-.error-container h3, .not-found h3 {
+.error-container h3,
+.not-found h3 {
   font-size: 20px;
   margin-bottom: 8px;
   color: #1c1e21;
 }
 
-.error-container p, .not-found p {
+.error-container p,
+.not-found p {
   font-size: 16px;
   color: #65676b;
   margin-bottom: 20px;

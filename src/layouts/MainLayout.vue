@@ -1,44 +1,30 @@
+<!-- MainLayout.vue -->
 <template>
-  <el-container style="height: 100vh; overflow: hidden;">
+  <el-container style="height: 100vh; overflow: hidden">
     <!-- Header -->
-    <el-header height="60px" style="padding: 0;">
+    <el-header height="60px" style="padding: 0">
       <HeaderComponent />
     </el-header>
-    
+
     <el-container>
       <!-- Sidebar -->
       <el-aside width="260px" class="desktop-only">
         <SidebarComponent />
       </el-aside>
-      
+
       <!-- Main Content -->
-      <el-main style="padding: 20px; overflow-y: auto; background-color: #f0f2f5;">
+      <el-main
+        style="padding: 20px; overflow-y: auto; background-color: #f0f2f5"
+      >
         <router-view />
       </el-main>
     </el-container>
   </el-container>
 </template>
 
-<script>
+<script setup>
 import HeaderComponent from '@/components/header/index.vue'
 import SidebarComponent from '@/components/sidebar/index.vue'
-
-export default {
-  name: 'MainLayout',
-  components: {
-    HeaderComponent,
-    SidebarComponent
-  },
-  created() {
-    // Fetch current user data if needed
-    if (this.$store.getters.isAuthenticated && !this.$store.getters.currentUser) {
-      this.$store.dispatch('fetchCurrentUser')
-    }
-    
-    // Fetch posts for home page
-    this.$store.dispatch('fetchPosts')
-  }
-}
 </script>
 
 <style scoped>

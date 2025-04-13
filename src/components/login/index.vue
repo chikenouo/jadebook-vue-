@@ -1,30 +1,102 @@
+<!-- src/views/Login.vue -->
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { loginApi } from '@/api/login'
+import { useUserStore } from '@/stores/userStore'
+
+const router = useRouter()
+const userStore = useUserStore()
+const loginForm = ref(null)
+
+const form = ref({
+  phoneNumber: '',
+  password: '',
+})
+
+const rules = {
+  phoneNumber: [
+    { required: true, message: '請輸入您的手機號碼', trigger: 'blur' },
+    {
+      pattern: /^[0-9]{10}$/,
+      message: '請輸入有效的10位數手機號碼',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    { required: true, message: '請輸入您的密碼', trigger: 'blur' },
+    { min: 6, message: '密碼長度不能少於6個字符', trigger: 'blur' },
+  ],
+}
+
+const loading = ref(false)
+
+onMounted(() => {
+  userStore.initialize()
+  if (userStore.isLoggedIn) {
+    router.push('/home')
+  }
+})
+
+const handleLogin = async () => {
+  // 檢查手機號碼和密碼是否都為空
+  if (!form.value.phoneNumber.trim() && !form.value.password.trim()) {
+    ElMessage.error('請輸入手機號碼和密碼')
+    return // 直接返回，不進行後續操作
+  }
+
+  try {
+    await loginForm.value.validate()
+    loading.value = true
+    const result = await loginApi(form.value)
+
+    userStore.login({
+      token: result.token,
+      userData: result.data,
+    })
+    ElMessage.success('登入成功')
+    router.push('/home')
+  } catch (error) {
+    console.error('Login error:', error.message)
+    ElMessage.error(error.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+const goToRegister = () => {
+  router.push('/register')
+}
+</script>
+
 <template>
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <img src="@/assets/logo.svg" alt="Logo" class="logo">
-        <h2 class="title">登入社群平台</h2>
+        <img src="@/assets/mountain.png" alt="Logo" class="logo" />
+        <h2 class="title">登入玉書</h2>
       </div>
-      
-      <el-form 
-        ref="loginForm" 
-        :model="loginForm" 
-        :rules="rules" 
+
+      <el-form
+        ref="loginForm"
+        :model="form"
+        :rules="rules"
         @submit.prevent="handleLogin"
         class="login-form"
       >
         <el-form-item prop="phoneNumber">
           <el-input
-            v-model="loginForm.phoneNumber"
+            v-model="form.phoneNumber"
             placeholder="請輸入手機號碼"
             prefix-icon="el-icon-mobile-phone"
             size="large"
           />
         </el-form-item>
-        
+
         <el-form-item prop="password">
           <el-input
-            v-model="loginForm.password"
+            v-model="form.password"
             placeholder="請輸入密碼"
             type="password"
             prefix-icon="el-icon-lock"
@@ -32,7 +104,7 @@
             show-password
           />
         </el-form-item>
-        
+
         <el-form-item>
           <el-button
             type="primary"
@@ -40,82 +112,23 @@
             :loading="loading"
             size="large"
             class="login-button"
+            @click="handleLogin"
           >
             登入
           </el-button>
         </el-form-item>
-        
+
         <div class="divider">
           <span>或</span>
         </div>
-        
-        <el-button
-          class="register-button"
-          @click="goToRegister"
-          size="large"
-        >
+
+        <el-button class="register-button" @click="goToRegister" size="large">
           註冊新帳號
         </el-button>
       </el-form>
-      
-      <div v-if="error" class="error-message">
-        {{ error }}
-      </div>
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'LoginView',
-  data() {
-    return {
-      loginForm: {
-        phoneNumber: '',
-        password: ''
-      },
-      rules: {
-        phoneNumber: [
-          { required: true, message: '請輸入您的手機號碼', trigger: 'blur' },
-          { pattern: /^[0-9]{10}$/, message: '請輸入有效的10位數手機號碼', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '請輸入您的密碼', trigger: 'blur' },
-          { min: 6, message: '密碼長度不能少於6個字符', trigger: 'blur' }
-        ]
-      },
-      loading: false
-    }
-  },
-  computed: {
-    error() {
-      return this.$store.getters.error
-    }
-  },
-  methods: {
-    async handleLogin() {
-      try {
-        await this.$refs.loginForm.validate()
-        
-        this.loading = true
-        // Mock login with credentials
-        await this.$store.dispatch('login', this.loginForm)
-        // Redirect to home page
-        this.$router.push('/')
-      } catch (error) {
-        console.error('Login error:', error)
-        // Show error message (from store or generic)
-        this.$message.error(this.$store.getters.error || 'Login failed. Please check your credentials.')
-      } finally {
-        this.loading = false
-      }
-    },
-    goToRegister() {
-      this.$router.push('/register')
-    }
-  }
-}
-</script>
 
 <style scoped>
 .login-container {

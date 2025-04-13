@@ -1,133 +1,154 @@
+<!-- src/views/Home.vue -->
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import PostComponent from '@/components/post/index.vue'
+import defaultAvatar from '@/assets/defaultAvatar.svg'
+import { getAllPostsApi } from '@/api/api.js'
+import { useUserStore } from '@/stores/userStore'
+
+const router = useRouter()
+const userStore = useUserStore()
+
+const currentUser = ref(null)
+const posts = ref([])
+const loading = ref(false)
+const page = ref(1)
+const hasMorePosts = ref(true)
+
+onMounted(async () => {
+  userStore.initialize()
+  if (!userStore.isLoggedIn) {
+    router.push('/login')
+    return
+  }
+
+  try {
+    const response = await getAllPostsApi({ url: '/user/me' })
+    currentUser.value = response
+  } catch (error) {
+    console.error('Error fetching current user:', error)
+    router.push('/login')
+  }
+
+  await fetchPosts()
+})
+
+const fetchPosts = async () => {
+  try {
+    loading.value = true
+    const response = await getAllPostsApi({ url: '/posts' })
+    console.log('Posts response:', response)
+
+    if (Array.isArray(response)) {
+      posts.value = response
+    } else {
+      console.error('Expected an array, but got:', response)
+      posts.value = []
+    }
+  } catch (error) {
+    console.error('Error fetching posts:', error)
+    posts.value = []
+    ElMessage.error(error.message || '無法獲取貼文')
+  } finally {
+    loading.value = false
+  }
+}
+
+const goToCreatePost = () => {
+  router.push('/post/create')
+}
+
+const loadMorePosts = () => {
+  if (hasMorePosts.value && !loading.value) {
+    page.value += 1
+    fetchPosts()
+  }
+}
+
+const handleDeletePost = async (postId) => {
+  try {
+    await getAllPostsApi({ url: `/posts/${postId}`, method: 'delete' })
+    posts.value = posts.value.filter((post) => post.postId !== postId)
+    ElMessage.success('貼文已成功刪除')
+  } catch (error) {
+    ElMessage.error('無法刪除貼文')
+    console.error('Error deleting post:', error)
+  }
+}
+</script>
+
 <template>
   <div class="home-container">
     <!-- Create Post Card -->
-    <div class="create-post-card" v-if="isAuthenticated">
+    <div class="create-post-card">
       <div class="create-post-header">
-        <img 
-          :src="currentUser?.photo || require('@/assets/defaultAvatar.svg')" 
-          alt="Profile" 
+        <img
+          :src="currentUser?.photo || defaultAvatar"
+          alt="Profile"
           class="avatar"
-        >
-        <el-button 
-          class="create-post-button" 
-          @click="goToCreatePost"
-        >
-          What's on your mind, {{ currentUser?.name?.split(' ')[0] || 'there' }}?
+        />
+        <el-button class="create-post-button" @click="goToCreatePost">
+          在想些什麼，{{ currentUser?.userName?.split(' ')[0] || '朋友' }}？
         </el-button>
       </div>
-      
+
       <el-divider />
-      
+
       <div class="create-post-actions">
         <div class="action">
           <i class="fas fa-images"></i>
-          <span>Photo/Video</span>
+          <span>照片/影片</span>
         </div>
         <div class="action">
           <i class="fas fa-smile"></i>
-          <span>Feeling/Activity</span>
+          <span>心情/活動</span>
         </div>
       </div>
     </div>
-    
+
     <!-- Loading Skeleton -->
     <div v-if="loading">
       <el-skeleton :rows="3" animated />
       <el-divider />
       <el-skeleton :rows="3" animated />
     </div>
-    
+
     <!-- Posts List -->
-    <div v-else-if="posts.length > 0">
-      <PostComponent 
-        v-for="post in posts" 
-        :key="post.id" 
-        :post="post" 
-        @delete="handleDeletePost"
-      />
+    <div v-else-if="posts && posts.length > 0">
+      <div v-for="post in posts" :key="post.postId" class="post-container">
+        <PostComponent
+          :post="post"
+          :default-avatar="defaultAvatar"
+          @delete="handleDeletePost"
+        />
+      </div>
     </div>
-    
+
     <!-- No Posts Message -->
     <div v-else class="no-posts">
       <i class="el-icon-document"></i>
-      <h3>No posts yet</h3>
-      <p>Be the first to share something with the community!</p>
-      <el-button type="primary" @click="goToCreatePost">Create Post</el-button>
+      <h3>尚未有貼文</h3>
+      <p>成為第一個與社群分享的人吧！</p>
+      <el-button type="primary" @click="goToCreatePost">創建貼文</el-button>
     </div>
-    
+
     <!-- Infinite Scroll Loader -->
-    <div class="load-more-container" v-if="posts.length > 0 && !loading">
-      <el-button plain @click="loadMorePosts">Load More</el-button>
+    <div
+      class="load-more-container"
+      v-if="posts && posts.length > 0 && !loading"
+    >
+      <el-button plain @click="loadMorePosts">加載更多</el-button>
     </div>
   </div>
 </template>
-
-<script>
-import PostComponent from '@/components/post/index.vue'
-
-export default {
-  name: 'HomeView',
-  components: {
-    PostComponent
-  },
-  data() {
-    return {
-      page: 1,
-      hasMorePosts: true
-    }
-  },
-  computed: {
-    currentUser() {
-      return this.$store.getters.currentUser
-    },
-    isAuthenticated() {
-      return this.$store.getters.isAuthenticated
-    },
-    posts() {
-      return this.$store.getters.allPosts
-    },
-    loading() {
-      return this.$store.getters.isLoading
-    }
-  },
-  mounted() {
-    this.fetchPosts()
-  },
-  methods: {
-    async fetchPosts() {
-      try {
-        await this.$store.dispatch('fetchPosts')
-      } catch (error) {
-        console.error('Error fetching posts:', error)
-      }
-    },
-    goToCreatePost() {
-      this.$router.push('/post/create')
-    },
-    loadMorePosts() {
-      if (this.hasMorePosts && !this.loading) {
-        this.page += 1
-        // Implement pagination loading here
-        // This would typically call an API with a page parameter
-      }
-    },
-    async handleDeletePost(postId) {
-      try {
-        await this.$store.dispatch('deletePost', postId)
-        this.$message.success('Post deleted successfully')
-      } catch (error) {
-        this.$message.error('Failed to delete post')
-        console.error('Error deleting post:', error)
-      }
-    }
-  }
-}
-</script>
 
 <style scoped>
 .home-container {
   max-width: 680px;
   margin: 0 auto;
+  overflow-y: auto;
 }
 
 .create-post-card {
@@ -219,5 +240,13 @@ export default {
 .load-more-container {
   text-align: center;
   margin: 20px 0;
+}
+
+.post-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 16px;
 }
 </style>

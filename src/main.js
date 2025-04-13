@@ -1,54 +1,28 @@
+// main.js
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-// 导入自定义的 Element Plus 主题样式
 import './styles/element-theme.css'
 import App from './App.vue'
 import router from './router'
-import store from './store'
-import axios from 'axios'
-import apiService from './api'
-
-// Configure axios for real API use when not in development
-if (process.env.NODE_ENV !== 'development') {
-  // Set base URL for all axios requests
-  axios.defaults.baseURL = 'http://localhost:8000/api'
-
-  // Add authorization header with JWT token if available
-  axios.interceptors.request.use(
-    config => {
-      const token = localStorage.getItem('token')
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
-      return config
-    },
-    error => {
-      return Promise.reject(error)
-    }
-  )
-
-  // Handle auth errors
-  axios.interceptors.response.use(
-    response => response,
-    error => {
-      if (error.response && error.response.status === 401) {
-        store.dispatch('logout')
-        router.push('/login')
-      }
-      return Promise.reject(error)
-    }
-  )
-}
+import request from './api/request'
+import { createPinia } from 'pinia'
 
 const app = createApp(App)
+const pinia = createPinia()
 
-app.use(ElementPlus)
-app.use(store)
+// 全局配置
+app.config.globalProperties.$axios = request // 使用 request.js 中的實例
+
+// 使用插件
+app.use(pinia) // 先使用 Pinia
+app.use(ElementPlus, {
+  size: 'default',
+})
 app.use(router)
 
-// Mount the app directly for now, debug auto-login later
-app.mount('#app')
-
-// Log to indicate app is mounted
-console.log('Vue app mounted')
+// 等待路由準備就緒後再掛載應用
+router.isReady().then(() => {
+  app.mount('#app')
+  console.log('Vue app mounted')
+})
