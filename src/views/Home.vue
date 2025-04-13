@@ -1,15 +1,24 @@
+<<<<<<< HEAD
 <!-- src/views/Home.vue -->
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import PostComponent from '@/components/post/index.vue'
 import defaultAvatar from '@/assets/defaultAvatar.svg'
+<<<<<<< HEAD
 import { getAllPostsApi } from '@/api/api.js'
 import { useUserStore } from '@/stores/userStore'
 
 const router = useRouter()
 const userStore = useUserStore()
+=======
+import axios from '@/api/request'
+
+const router = useRouter()
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 
 const currentUser = ref(null)
 const posts = ref([])
@@ -18,6 +27,7 @@ const page = ref(1)
 const hasMorePosts = ref(true)
 
 onMounted(async () => {
+<<<<<<< HEAD
   userStore.initialize()
   if (!userStore.isLoggedIn) {
     router.push('/login')
@@ -32,12 +42,27 @@ onMounted(async () => {
     router.push('/login')
   }
 
+=======
+  // 調用 /api/user/me 獲取用戶資料
+  try {
+    const response = await axios.get('http://localhost:8080/api/user/me', {
+      withCredentials: true,
+    })
+    currentUser.value = response.data
+  } catch (error) {
+    console.error('Error fetching current user:', error)
+    // router.beforeEach 已處理未登入跳轉，這裡不需要重複處理
+  }
+
+  // 獲取帖子
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
   await fetchPosts()
 })
 
 const fetchPosts = async () => {
   try {
     loading.value = true
+<<<<<<< HEAD
     const response = await getAllPostsApi({ url: '/posts' })
     console.log('Posts response:', response)
 
@@ -51,6 +76,15 @@ const fetchPosts = async () => {
     console.error('Error fetching posts:', error)
     posts.value = []
     ElMessage.error(error.message || '無法獲取貼文')
+=======
+    const response = await axios.get('http://localhost:8080/api/posts', {
+      withCredentials: true,
+    })
+    posts.value = response.data
+  } catch (error) {
+    console.error('Error fetching posts:', error)
+    // router.beforeEach 已處理未登入跳轉
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
   } finally {
     loading.value = false
   }
@@ -63,12 +97,17 @@ const goToCreatePost = () => {
 const loadMorePosts = () => {
   if (hasMorePosts.value && !loading.value) {
     page.value += 1
+<<<<<<< HEAD
     fetchPosts()
+=======
+    // 實現分頁加載（這裡需要後端支持）
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
   }
 }
 
 const handleDeletePost = async (postId) => {
   try {
+<<<<<<< HEAD
     await getAllPostsApi({ url: `/posts/${postId}`, method: 'delete' })
     posts.value = posts.value.filter((post) => post.postId !== postId)
     ElMessage.success('貼文已成功刪除')
@@ -250,3 +289,17 @@ const handleDeletePost = async (postId) => {
   padding: 16px;
 }
 </style>
+=======
+    await axios.delete(`http://localhost:8080/api/posts/${postId}`, {
+      withCredentials: true,
+    })
+    posts.value = posts.value.filter((post) => post.id !== postId)
+    ElMessage.success('Post deleted successfully')
+  } catch (error) {
+    ElMessage.error('Failed to delete post')
+    console.error('Error deleting post:', error)
+    // router.beforeEach 已處理未登入跳轉
+  }
+}
+</script>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e

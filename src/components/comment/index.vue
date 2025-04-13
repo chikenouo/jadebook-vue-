@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- src/components/comment/index.vue -->
 <template>
   <div class="comment">
@@ -11,16 +12,36 @@
       <div class="comment-bubble">
         <div class="comment-author" @click="goToUserProfile(comment.userId)">
           {{ comment.userName || 'Unknown User' }}
+=======
+<template>
+  <div class="comment">
+    <img 
+      :src="comment.author?.photo || require('@/assets/defaultAvatar.svg')" 
+      alt="Profile" 
+      class="avatar"
+      @click="goToUserProfile(comment.authorId)"
+    >
+    <div class="comment-content">
+      <div class="comment-bubble">
+        <div class="comment-author" @click="goToUserProfile(comment.authorId)">
+          {{ comment.author?.name || 'Unknown User' }}
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
         </div>
         <div class="comment-text">{{ comment.content }}</div>
       </div>
       <div class="comment-actions">
+<<<<<<< HEAD
+=======
+        <span>Like</span>
+        <span>Reply</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
         <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
       </div>
     </div>
   </div>
 </template>
 
+<<<<<<< HEAD
 <script setup>
 import { useRouter } from 'vue-router'
 
@@ -53,12 +74,52 @@ const formatDate = (dateString) => {
 const goToUserProfile = (userId) => {
   if (userId) {
     router.push(`/user/${userId}`)
+=======
+<script>
+export default {
+  name: 'CommentComponent',
+  props: {
+    comment: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    formatDate(dateString) {
+      if (!dateString) return 'Unknown date'
+      
+      const date = new Date(dateString)
+      const now = new Date()
+      const diffMs = now - date
+      const diffMins = Math.floor(diffMs / (1000 * 60))
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+      
+      if (diffMins < 60) {
+        return diffMins === 0 ? 'Just now' : `${diffMins}m ago`
+      } else if (diffHours < 24) {
+        return `${diffHours}h ago`
+      } else if (diffDays < 7) {
+        return `${diffDays}d ago`
+      } else {
+        return date.toLocaleDateString()
+      }
+    },
+    goToUserProfile(userId) {
+      if (userId) {
+        this.$router.push(`/user/${userId}`)
+      }
+    }
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
   }
 }
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 /* 樣式保持不變 */
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 .comment {
   display: flex;
   margin-bottom: 12px;

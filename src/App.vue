@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <!-- src/App.vue -->
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 <template>
   <div id="app">
     <router-view />
@@ -14,16 +17,27 @@
   box-sizing: border-box;
 }
 
+<<<<<<< HEAD
 html,
 body {
   height: 100%;
   overflow-y: auto !important; /* 强制允許垂直滾動 */
   margin: 0;
+=======
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #1c1e21;
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 }
 
 #app {
   min-height: 100vh;
+<<<<<<< HEAD
   overflow-y: auto !important; /* 確保 #app 不限制滾動 */
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 }
 
 .container {
@@ -34,11 +48,19 @@ body {
 
 /* 台灣玉山銀行的童話松柏綠色 */
 :root {
+<<<<<<< HEAD
   --esun-green: #007550;
   --esun-green-light: #009464;
   --esun-green-dark: #005c3f;
   --esun-text-on-green: #ffffff;
   --esun-accent: #e6b31e;
+=======
+  --esun-green: #007550; /* 主要綠色 */
+  --esun-green-light: #009464; /* 較淺綠色，用於懸停效果 */
+  --esun-green-dark: #005c3f; /* 深綠色，用於重點強調 */
+  --esun-text-on-green: #ffffff; /* 在綠色背景上的文字顏色 */
+  --esun-accent: #e6b31e; /* 輔助色（金色），用於強調和按鈕 */
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 }
 
 .esun-green {
@@ -57,6 +79,10 @@ body {
   background-color: var(--esun-accent);
 }
 
+<<<<<<< HEAD
+=======
+/* 原來的藍色樣式（保留但改為綠色） */
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 .fb-blue {
   color: var(--esun-green);
 }
@@ -65,6 +91,10 @@ body {
   background-color: var(--esun-green);
 }
 
+<<<<<<< HEAD
+=======
+/* 通用按鈕樣式 */
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 .custom-button {
   background-color: var(--esun-green);
   color: var(--esun-text-on-green);
@@ -78,6 +108,10 @@ body {
   background-color: var(--esun-green-light);
 }
 
+<<<<<<< HEAD
+=======
+/* Card styling */
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 .card {
   background-color: white;
   border-radius: 8px;
@@ -85,12 +119,20 @@ body {
   margin-bottom: 16px;
 }
 
+<<<<<<< HEAD
+=======
+/* Facebook-like rounded input style */
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 .fb-input {
   border-radius: 20px;
   padding: 8px 16px;
   border: 1px solid #dddfe2;
 }
 
+<<<<<<< HEAD
+=======
+/* Responsive styles */
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
 @media screen and (max-width: 768px) {
   .desktop-only {
     display: none;

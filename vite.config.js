@@ -11,12 +11,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+<<<<<<< HEAD
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
       include: [/node_modules/],
     },
   },
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
   // 設置端口輸出
   server: {
     port: 4201,

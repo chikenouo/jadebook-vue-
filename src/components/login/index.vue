@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- src/views/Login.vue -->
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -11,6 +12,18 @@ const userStore = useUserStore()
 const loginForm = ref(null)
 
 const form = ref({
+=======
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { loginApi } from '@/api/login'
+
+const router = useRouter()
+const formRef = ref(null)
+
+const loginForm = ref({
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
   phoneNumber: '',
   password: '',
 })
@@ -32,6 +45,7 @@ const rules = {
 
 const loading = ref(false)
 
+<<<<<<< HEAD
 onMounted(() => {
   userStore.initialize()
   if (userStore.isLoggedIn) {
@@ -60,6 +74,25 @@ const handleLogin = async () => {
   } catch (error) {
     console.error('Login error:', error.message)
     ElMessage.error(error.message)
+=======
+const handleLogin = async () => {
+  try {
+    await formRef.value.validate()
+    loading.value = true
+    const result = await loginApi(loginForm.value)
+    console.log('Login API result:', result)
+
+    if (result.message === '登入成功') {
+      ElMessage.success('登入成功')
+      router.push('/home')
+    } else {
+      console.log('Login failed with message:', result.message)
+      ElMessage.error('登入失敗，請檢查您的帳號密碼')
+    }
+  } catch (error) {
+    console.error('Login error:', error.response?.data || error.message)
+    ElMessage.error('登入失敗，請檢查您的帳號密碼')
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
   } finally {
     loading.value = false
   }
@@ -69,6 +102,7 @@ const goToRegister = () => {
   router.push('/register')
 }
 </script>
+<<<<<<< HEAD
 
 <template>
   <div class="login-container">
@@ -225,3 +259,5 @@ const goToRegister = () => {
   margin-top: 10px;
 }
 </style>
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
