@@ -1,23 +1,61 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import axios from '@/api/request'
+import { useUserStore } from '@/stores/userStore'
+import { storeToRefs } from 'pinia'
+import defaultAvatar from '@/assets/defaultAvatar.svg'
+
+const router = useRouter()
+const searchQuery = ref('')
+const userStore = useUserStore()
+const { userData: currentUser } = storeToRefs(userStore)
+
+// 處理下拉選單命令
+const handleCommand = async (command) => {
+  switch (command) {
+    case 'profile':
+      if (currentUser.value) {
+        router.push(`/user/${currentUser.value.id}`)
+      }
+      break
+    case 'logout':
+      try {
+        // 調用後端登出 API
+        await axios.post('/api/logout', {}, { withCredentials: true })
+        ElMessage.success('登出成功')
+        userStore.logout()
+        router.push('/login')
+      } catch (error) {
+        console.error('Error during logout:', error)
+        ElMessage.error('登出失敗')
+      }
+      break
+  }
+}
+</script>
+<!-- header.vue -->
 <template>
   <div class="header-container">
     <div class="header-left">
       <!-- Logo -->
       <router-link to="/" class="logo-link">
-        <img src="@/assets/logo.svg" alt="Logo" class="logo" />
+        <img src="@/assets/mountain.png" alt="Logo" class="logo" />
       </router-link>
-      
+
       <!-- Search Bar -->
       <div class="search-container">
         <el-input
           v-model="searchQuery"
-          placeholder="Search on Facebook"
+          placeholder="搜尋"
           prefix-icon="el-icon-search"
           class="search-input"
           clearable
         />
       </div>
     </div>
-    
+
     <!-- Navigation Links -->
     <div class="header-center desktop-only">
       <div class="nav-links">
@@ -29,7 +67,7 @@
         </router-link>
       </div>
     </div>
-    
+
     <!-- User Menu -->
     <div class="header-right">
       <div class="icon-button">
@@ -41,20 +79,16 @@
       <div class="icon-button">
         <i class="fas fa-bell"></i>
       </div>
-      
+
       <!-- User Profile Dropdown -->
-      <el-dropdown 
-        trigger="click" 
-        v-if="currentUser"
-        @command="handleCommand"
-      >
+      <el-dropdown trigger="click" v-if="currentUser" @command="handleCommand">
         <div class="user-profile">
-          <img 
-            :src="currentUser.photo || require('@/assets/defaultAvatar.svg')" 
-            alt="Profile" 
+          <img
+            :src="currentUser.photo || defaultAvatar"
+            alt="Profile"
             class="avatar"
-          >
-          <span class="username desktop-only">{{ currentUser.name }}</span>
+          />
+          <span class="username desktop-only">{{ currentUser?.name }}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -67,7 +101,7 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      
+
       <!-- Login Button (if not authenticated) -->
       <router-link v-else to="/login">
         <el-button type="primary" size="small">Login</el-button>
@@ -75,37 +109,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'HeaderComponent',
-  data() {
-    return {
-      searchQuery: ''
-    }
-  },
-  computed: {
-    currentUser() {
-      return this.$store.getters.currentUser
-    }
-  },
-  methods: {
-    handleCommand(command) {
-      switch (command) {
-        case 'profile':
-          if (this.currentUser) {
-            this.$router.push(`/user/${this.currentUser.id}`)
-          }
-          break
-        case 'logout':
-          this.$store.dispatch('logout')
-          this.$router.push('/login')
-          break
-      }
-    }
-  }
-}
-</script>
 
 <style scoped>
 .header-container {

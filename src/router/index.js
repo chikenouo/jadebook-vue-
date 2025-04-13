@@ -1,117 +1,81 @@
+// router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import MainLayout from '../layouts/MainLayout.vue'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
+import Login from '../components/login/index.vue'
+import Register from '../components/register/index.vue'
 import Home from '../views/Home.vue'
 import PostDetail from '../views/PostDetail.vue'
 import PostCreate from '../views/PostCreate.vue'
 import UserProfile from '../views/UserProfile.vue'
-import TestPage from '../views/TestPage.vue'
-import Settings from '../views/Settings.vue'
+import Settings from '../components/settings/index.vue'
 import Marketplace from '../views/Marketplace.vue'
-import { isAuthenticated } from '../utils/auth'
+import { ElMessage } from 'element-plus'
+import axios from '@/api/request'
+import PostComments from '@/views/PostComments.vue'
 
 const routes = [
   {
-    path: '/test',
-    name: 'Test',
-    component: TestPage,
-    meta: { requiresAuth: false }
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    meta: { requiresAuth: false }
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register,
-    meta: { requiresAuth: false }
-  },
-  {
     path: '/',
+    name: '',
     component: MainLayout,
+    redirect: '/login',
     children: [
       {
-        path: '',
+        path: 'home',
         name: 'Home',
         component: Home,
-        meta: { requiresAuth: true }
-      },
-      {
-        path: 'home',
-        redirect: { name: 'Home' }  // Redirect /home to /
+        meta: { requiresAuth: true },
       },
       {
         path: 'post/create',
         name: 'PostCreate',
         component: PostCreate,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
       {
         path: 'post/:id',
         name: 'PostDetail',
         component: PostDetail,
         meta: { requiresAuth: true },
-        props: true
+        props: true,
       },
       {
         path: 'user/:id',
         name: 'UserProfile',
         component: UserProfile,
         meta: { requiresAuth: true },
-        props: true
+        props: true,
       },
       {
         path: 'settings',
         name: 'Settings',
         component: Settings,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
       },
       {
         path: 'marketplace',
         name: 'Marketplace',
         component: Marketplace,
-        meta: { requiresAuth: true }
-      }
-    ]
+        meta: { requiresAuth: true },
+      },
+    ],
   },
-  // Catch-all route for 404 pages
+  { path: '/login', name: 'Login', component: Login },
+  { path: '/register', name: 'Register', component: Register },
+  {
+    path: '/post/:postId/comments',
+    name: 'PostComments',
+    component: PostComments,
+  },
   {
     path: '/:pathMatch(.*)*',
-    redirect: { name: 'Home' }
-  }
+    redirect: '/login',
+  },
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
-
-// Navigation guard to check authentication
-router.beforeEach((to, from, next) => {
-  // For demo purposes, allow all routes in development mode
-  if (process.env.NODE_ENV === 'development') {
-    next()
-    return
-  }
-  
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!isAuthenticated()) {
-      next({ name: 'Login' })
-    } else {
-      next()
-    }
-  } else {
-    // Redirect to home if authenticated user tries to access login/register
-    if (isAuthenticated() && (to.name === 'Login' || to.name === 'Register')) {
-      next({ name: 'Home' })
-    } else {
-      next()
-    }
-  }
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
 })
 
 export default router

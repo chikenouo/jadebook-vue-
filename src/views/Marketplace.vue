@@ -1,29 +1,32 @@
+// 此頁目前僅作展示用
 <template>
   <div class="marketplace-container">
     <div class="marketplace-header">
       <h1>商品市集</h1>
-      
+
       <!-- 精選商品輪播 -->
       <div class="featured-products" v-if="featuredProducts.length > 0">
         <h2 class="featured-title">精選商品</h2>
         <div class="featured-carousel">
-          <div 
-            v-for="product in featuredProducts" 
-            :key="product.id" 
+          <div
+            v-for="product in featuredProducts"
+            :key="product.id"
             class="featured-product-card"
             @click="openProductDetails(product)"
           >
             <div class="featured-product-image">
-              <img :src="product.image" :alt="product.title">
+              <img :src="product.image" :alt="product.title" />
             </div>
             <div class="featured-product-info">
-              <div class="featured-product-price">${{ product.price.toLocaleString() }}</div>
+              <div class="featured-product-price">
+                ${{ product.price.toLocaleString() }}
+              </div>
               <div class="featured-product-title">{{ product.title }}</div>
             </div>
           </div>
         </div>
       </div>
-      
+
       <div class="marketplace-filters">
         <div class="filter-section">
           <el-input
@@ -35,13 +38,26 @@
           />
         </div>
         <div class="filter-section">
-          <el-select v-model="selectedCategory" placeholder="所有分類" class="category-select">
+          <el-select
+            v-model="selectedCategory"
+            placeholder="所有分類"
+            class="category-select"
+          >
             <el-option label="所有分類" value="" />
-            <el-option v-for="category in categories" :key="category" :label="category" :value="category" />
+            <el-option
+              v-for="category in categories"
+              :key="category"
+              :label="category"
+              :value="category"
+            />
           </el-select>
         </div>
         <div class="filter-section">
-          <el-select v-model="selectedPrice" placeholder="價格範圍" class="price-select">
+          <el-select
+            v-model="selectedPrice"
+            placeholder="價格範圍"
+            class="price-select"
+          >
             <el-option label="所有價格" value="" />
             <el-option label="$0 - $500" value="0-500" />
             <el-option label="$500 - $1,000" value="500-1000" />
@@ -50,21 +66,30 @@
           </el-select>
         </div>
         <div class="filter-section">
-          <el-select v-model="selectedLocation" placeholder="位置" class="location-select">
+          <el-select
+            v-model="selectedLocation"
+            placeholder="位置"
+            class="location-select"
+          >
             <el-option label="所有地區" value="" />
-            <el-option v-for="location in locations" :key="location" :label="location" :value="location" />
+            <el-option
+              v-for="location in locations"
+              :key="location"
+              :label="location"
+              :value="location"
+            />
           </el-select>
         </div>
       </div>
     </div>
-    
+
     <div class="marketplace-content">
       <!-- Sidebar Categories -->
       <div class="marketplace-sidebar desktop-only">
         <h3>分類</h3>
         <ul class="category-list">
-          <li 
-            v-for="category in categories" 
+          <li
+            v-for="category in categories"
             :key="category"
             :class="{ active: selectedCategory === category }"
             @click="selectedCategory = category"
@@ -73,20 +98,22 @@
           </li>
         </ul>
       </div>
-      
+
       <!-- Products Grid -->
       <div class="products-grid">
-        <div 
-          v-for="product in filteredProducts" 
-          :key="product.id" 
+        <div
+          v-for="product in filteredProducts"
+          :key="product.id"
           class="product-card"
           @click="openProductDetails(product)"
         >
           <div class="product-image">
-            <img :src="product.image" :alt="product.title">
+            <img :src="product.image" :alt="product.title" />
           </div>
           <div class="product-info">
-            <div class="product-price">${{ product.price.toLocaleString() }}</div>
+            <div class="product-price">
+              ${{ product.price.toLocaleString() }}
+            </div>
             <div class="product-title">{{ product.title }}</div>
             <div class="product-location">
               <i class="fas fa-map-marker-alt"></i> {{ product.location }}
@@ -95,7 +122,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Product Details Dialog -->
     <el-dialog
       v-model="productDetailsVisible"
@@ -109,49 +136,59 @@
       <template #header>
         <div class="dialog-empty-header"></div>
       </template>
-      
+
       <div v-if="selectedProduct" class="product-details">
         <div class="product-detail-left">
           <div class="product-detail-gallery">
-            <img :src="selectedProduct.image" :alt="selectedProduct.title" class="main-product-image">
+            <img
+              :src="selectedProduct.image"
+              :alt="selectedProduct.title"
+              class="main-product-image"
+            />
           </div>
-          
+
           <div class="product-detail-similar mobile-hidden">
             <h4 class="similar-title">類似商品</h4>
             <div class="similar-products">
-              <div 
-                v-for="product in filteredProducts.slice(0,4)" 
-                :key="product.id" 
+              <div
+                v-for="product in filteredProducts.slice(0, 4)"
+                :key="product.id"
                 class="similar-product-card"
                 v-if="product.id !== selectedProduct.id"
                 @click="openProductDetails(product)"
               >
                 <div class="similar-product-image">
-                  <img :src="product.image" :alt="product.title">
+                  <img :src="product.image" :alt="product.title" />
                 </div>
-                <div class="similar-product-price">${{ product.price.toLocaleString() }}</div>
+                <div class="similar-product-price">
+                  ${{ product.price.toLocaleString() }}
+                </div>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="product-detail-right">
           <div class="product-detail-info">
-            <h2 class="product-detail-price">${{ selectedProduct.price.toLocaleString() }}</h2>
+            <h2 class="product-detail-price">
+              ${{ selectedProduct.price.toLocaleString() }}
+            </h2>
             <h3 class="product-detail-title">{{ selectedProduct.title }}</h3>
-            
+
             <div class="product-detail-meta">
               <div class="meta-item">
-                <i class="fas fa-map-marker-alt"></i> {{ selectedProduct.location }}
+                <i class="fas fa-map-marker-alt"></i>
+                {{ selectedProduct.location }}
               </div>
               <div class="meta-item">
                 <i class="fas fa-tag"></i> {{ selectedProduct.category }}
               </div>
               <div class="meta-item">
-                <i class="fas fa-clock"></i> {{ formatDate(selectedProduct.listed_date) }}
+                <i class="fas fa-clock"></i>
+                {{ formatDate(selectedProduct.listed_date) }}
               </div>
             </div>
-            
+
             <div class="product-detail-actions">
               <el-button type="primary" class="action-button">
                 <i class="fas fa-comment"></i> 聯絡賣家
@@ -160,25 +197,34 @@
                 <i class="fas fa-bookmark"></i> 收藏商品
               </el-button>
             </div>
-            
+
             <el-divider />
-            
+
             <div class="product-detail-seller">
               <div class="seller-info">
-                <img :src="selectedProduct.seller.avatar" alt="Seller" class="seller-avatar">
+                <img
+                  :src="selectedProduct.seller.avatar"
+                  alt="Seller"
+                  class="seller-avatar"
+                />
                 <div>
-                  <div class="seller-name">{{ selectedProduct.seller.name }}</div>
+                  <div class="seller-name">
+                    {{ selectedProduct.seller.name }}
+                  </div>
                   <div class="seller-rating">
                     <i class="fas fa-star"></i>
-                    {{ selectedProduct.seller.rating }} · {{ selectedProduct.seller.reviews }} 個評價
+                    {{ selectedProduct.seller.rating }} ·
+                    {{ selectedProduct.seller.reviews }} 個評價
                   </div>
                 </div>
               </div>
-              <el-button type="text" class="view-profile-button">查看賣家檔案 <i class="fas fa-angle-right"></i></el-button>
+              <el-button type="text" class="view-profile-button"
+                >查看賣家檔案 <i class="fas fa-angle-right"></i
+              ></el-button>
             </div>
-            
+
             <el-divider />
-            
+
             <div class="product-detail-description">
               <h4>商品詳情</h4>
               <p>{{ selectedProduct.description }}</p>
@@ -201,7 +247,7 @@ export default {
       selectedLocation: '',
       productDetailsVisible: false,
       selectedProduct: null,
-      
+
       // 商品分類列表
       categories: [
         '電子產品',
@@ -212,9 +258,9 @@ export default {
         '運動器材',
         '玩具與遊戲',
         '樂器',
-        '圖書與雜誌'
+        '圖書與雜誌',
       ],
-      
+
       // 地區列表
       locations: [
         '台北市',
@@ -225,189 +271,211 @@ export default {
         '高雄市',
         '基隆市',
         '新竹市',
-        '嘉義市'
+        '嘉義市',
       ],
-      
+
       // 商品列表
       products: [
         {
           id: '1',
           title: 'Apple iPhone 13 128GB 午夜藍 (九成新)',
           price: 19000,
-          description: '購買於2021年9月，外觀幾乎全新，附原廠配件及保護殼。電池健康度92%，無維修紀錄。因換新機故出售。',
+          description:
+            '購買於2021年9月，外觀幾乎全新，附原廠配件及保護殼。電池健康度92%，無維修紀錄。因換新機故出售。',
           category: '電子產品',
           location: '台北市',
-          image: 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-13-blue-select-2021?wid=940&hei=1112&fmt=png-alpha&.v=1645572386470',
+          image:
+            'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-13-blue-select-2021?wid=940&hei=1112&fmt=png-alpha&.v=1645572386470',
           listed_date: new Date('2023-04-01').toISOString(),
           seller: {
             name: '陳小明',
             avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
             rating: 4.9,
-            reviews: 18
-          }
+            reviews: 18,
+          },
         },
         {
           id: '2',
           title: 'IKEA MALM 雙人床架含床墊 (白色)',
           price: 5500,
-          description: '使用不到一年的IKEA MALM雙人床架(140x200cm)，附贈床墊。因搬家需要出售，整體狀況良好，有輕微使用痕跡。',
+          description:
+            '使用不到一年的IKEA MALM雙人床架(140x200cm)，附贈床墊。因搬家需要出售，整體狀況良好，有輕微使用痕跡。',
           category: '家具家飾',
           location: '新北市',
-          image: 'https://www.ikea.com/tw/zh/images/products/malm-bed-frame-high-white-luroey__0638608_pe699032_s5.jpg',
+          image:
+            'https://www.ikea.com/tw/zh/images/products/malm-bed-frame-high-white-luroey__0638608_pe699032_s5.jpg',
           listed_date: new Date('2023-04-02').toISOString(),
           seller: {
             name: '李小華',
             avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
             rating: 4.7,
-            reviews: 9
-          }
+            reviews: 9,
+          },
         },
         {
           id: '3',
           title: 'Yamaha FG800 民謠吉他 (原木色)',
           price: 7000,
-          description: '2020年購入的Yamaha FG800民謠吉他，狀況良好，音色渾厚。附贈吉他袋、Pick與調音器。僅在家練習使用，無明顯刮痕。',
+          description:
+            '2020年購入的Yamaha FG800民謠吉他，狀況良好，音色渾厚。附贈吉他袋、Pick與調音器。僅在家練習使用，無明顯刮痕。',
           category: '樂器',
           location: '台中市',
-          image: 'https://www.yamahamusiclondon.com/sites/ymlv5.39/productimages/900x900/FG800NT_1.jpg',
+          image:
+            'https://www.yamahamusiclondon.com/sites/ymlv5.39/productimages/900x900/FG800NT_1.jpg',
           listed_date: new Date('2023-04-03').toISOString(),
           seller: {
             name: '張大山',
             avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
             rating: 5.0,
-            reviews: 12
-          }
+            reviews: 12,
+          },
         },
         {
           id: '4',
           title: 'Nintendo Switch 主機 (紅藍手把) + 3款遊戲',
           price: 8500,
-          description: 'Nintendo Switch主機，2019年版本，電池續航力加強版。附原廠配件，螢幕有貼保護貼。贈送《動物森友會》、《薩爾達傳說》與《瑪利歐賽車8》三款遊戲片。',
+          description:
+            'Nintendo Switch主機，2019年版本，電池續航力加強版。附原廠配件，螢幕有貼保護貼。贈送《動物森友會》、《薩爾達傳說》與《瑪利歐賽車8》三款遊戲片。',
           category: '電子產品',
           location: '高雄市',
-          image: 'https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_auto/c_scale,w_300/v1/ncom/en_US/hardware/switch/nintendo-switch-neon-blue-neon-red-oled-model/gallery/image01',
+          image:
+            'https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_auto/c_scale,w_300/v1/ncom/en_US/hardware/switch/nintendo-switch-neon-blue-neon-red-oled-model/gallery/image01',
           listed_date: new Date('2023-04-05').toISOString(),
           seller: {
             name: '林小玲',
             avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
             rating: 4.8,
-            reviews: 21
-          }
+            reviews: 21,
+          },
         },
         {
           id: '5',
           title: '全新 Nike Air Jordan 1 High OG 籃球鞋 US9.5',
           price: 6200,
-          description: '全新未穿過的Nike Air Jordan 1 High OG，尺寸US9.5。附原盒及吊牌，購於Nike官方網站，有購買證明。',
+          description:
+            '全新未穿過的Nike Air Jordan 1 High OG，尺寸US9.5。附原盒及吊牌，購於Nike官方網站，有購買證明。',
           category: '服裝與配件',
           location: '台北市',
-          image: 'https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/5e19c8e4-3dbe-4f09-976d-215811578dff/air-jordan-1-mid-shoes-BxpQMJ.png',
+          image:
+            'https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/5e19c8e4-3dbe-4f09-976d-215811578dff/air-jordan-1-mid-shoes-BxpQMJ.png',
           listed_date: new Date('2023-04-06').toISOString(),
           seller: {
             name: '王小剛',
             avatar: 'https://randomuser.me/api/portraits/men/5.jpg',
             rating: 4.6,
-            reviews: 7
-          }
+            reviews: 7,
+          },
         },
         {
           id: '6',
           title: 'Sony A7III 全片幅無反相機 (含24-70mm鏡頭)',
           price: 48000,
-          description: 'Sony A7III全片幅無反相機，機身快門數約8000，2020年購入。附Sony 24-70mm F2.8 GM鏡頭，整體狀況良好，無摔撞或進水紀錄。附原廠電池兩顆、充電器、背帶。',
+          description:
+            'Sony A7III全片幅無反相機，機身快門數約8000，2020年購入。附Sony 24-70mm F2.8 GM鏡頭，整體狀況良好，無摔撞或進水紀錄。附原廠電池兩顆、充電器、背帶。',
           category: '電子產品',
           location: '台中市',
-          image: 'https://www.sony.com.hk/image/5d02da5df552836db894cead8a68c8df?fmt=png-alpha&wid=720',
+          image:
+            'https://www.sony.com.hk/image/5d02da5df552836db894cead8a68c8df?fmt=png-alpha&wid=720',
           listed_date: new Date('2023-04-08').toISOString(),
           seller: {
             name: '周小芳',
             avatar: 'https://randomuser.me/api/portraits/women/6.jpg',
             rating: 5.0,
-            reviews: 15
-          }
+            reviews: 15,
+          },
         },
         {
           id: '7',
           title: '全套哈利波特英文原版書 (精裝版)',
           price: 3800,
-          description: '全套七本哈利波特英文原版書，Bloomsbury出版社精裝版，書況良好，僅些微自然泛黃，無劃線註記。',
+          description:
+            '全套七本哈利波特英文原版書，Bloomsbury出版社精裝版，書況良好，僅些微自然泛黃，無劃線註記。',
           category: '圖書與雜誌',
           location: '台南市',
-          image: 'https://m.media-amazon.com/images/I/71rOzy4cyAL._AC_UF1000,1000_QL80_.jpg',
+          image:
+            'https://m.media-amazon.com/images/I/71rOzy4cyAL._AC_UF1000,1000_QL80_.jpg',
           listed_date: new Date('2023-04-10').toISOString(),
           seller: {
             name: '黃小梅',
             avatar: 'https://randomuser.me/api/portraits/women/7.jpg',
             rating: 4.9,
-            reviews: 11
-          }
+            reviews: 11,
+          },
         },
         {
           id: '8',
           title: 'Giant TCR Advanced 2 碳纖維公路車',
           price: 42000,
-          description: '2021年Giant TCR Advanced 2碳纖維公路車，size M (適合170-180cm騎士)。Shimano 105套件，騎乘不到1000公里，車況如新。因換車故出售。',
+          description:
+            '2021年Giant TCR Advanced 2碳纖維公路車，size M (適合170-180cm騎士)。Shimano 105套件，騎乘不到1000公里，車況如新。因換車故出售。',
           category: '運動器材',
           location: '新北市',
-          image: 'https://www.giant-bicycles.com/images/products/2022/TCR_Advanced_2_KOM_Disc_Color_A_Iris.jpg',
+          image:
+            'https://www.giant-bicycles.com/images/products/2022/TCR_Advanced_2_KOM_Disc_Color_A_Iris.jpg',
           listed_date: new Date('2023-04-11').toISOString(),
           seller: {
             name: '吳小豪',
             avatar: 'https://randomuser.me/api/portraits/men/8.jpg',
             rating: 4.7,
-            reviews: 14
-          }
-        }
-      ]
+            reviews: 14,
+          },
+        },
+      ],
     }
   },
   computed: {
     // 精選商品（推薦商品）
     featuredProducts() {
       // 从所有商品中选择前3个价格最高的商品作为精选商品
-      return [...this.products]
-        .sort((a, b) => b.price - a.price)
-        .slice(0, 3);
+      return [...this.products].sort((a, b) => b.price - a.price).slice(0, 3)
     },
-    
+
     filteredProducts() {
       let filtered = [...this.products]
-      
+
       // 搜尋關鍵字篩選
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase()
-        filtered = filtered.filter(product => 
-          product.title.toLowerCase().includes(query) || 
-          product.description.toLowerCase().includes(query) ||
-          product.category.toLowerCase().includes(query)
+        filtered = filtered.filter(
+          (product) =>
+            product.title.toLowerCase().includes(query) ||
+            product.description.toLowerCase().includes(query) ||
+            product.category.toLowerCase().includes(query)
         )
       }
-      
+
       // 分類篩選
       if (this.selectedCategory) {
-        filtered = filtered.filter(product => product.category === this.selectedCategory)
+        filtered = filtered.filter(
+          (product) => product.category === this.selectedCategory
+        )
       }
-      
+
       // 價格範圍篩選
       if (this.selectedPrice) {
         const [min, max] = this.selectedPrice.split('-')
         if (max) {
-          filtered = filtered.filter(product => 
-            product.price >= Number(min) && product.price <= Number(max)
+          filtered = filtered.filter(
+            (product) =>
+              product.price >= Number(min) && product.price <= Number(max)
           )
         } else {
           // 處理"5000+"的情況
-          filtered = filtered.filter(product => product.price >= Number(min.replace('+', '')))
+          filtered = filtered.filter(
+            (product) => product.price >= Number(min.replace('+', ''))
+          )
         }
       }
-      
+
       // 地區篩選
       if (this.selectedLocation) {
-        filtered = filtered.filter(product => product.location === this.selectedLocation)
+        filtered = filtered.filter(
+          (product) => product.location === this.selectedLocation
+        )
       }
-      
+
       return filtered
-    }
+    },
   },
   methods: {
     openProductDetails(product) {
@@ -416,12 +484,12 @@ export default {
     },
     formatDate(dateString) {
       if (!dateString) return 'Unknown date'
-      
+
       const date = new Date(dateString)
       const now = new Date()
       const diffMs = now - date
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-      
+
       if (diffDays < 1) {
         return '今天上架'
       } else if (diffDays < 2) {
@@ -431,8 +499,8 @@ export default {
       } else {
         return date.toLocaleDateString()
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -509,7 +577,7 @@ export default {
 }
 
 .featured-product-card::after {
-  content: "精選";
+  content: '精選';
   position: absolute;
   top: 10px;
   right: 10px;
@@ -575,7 +643,9 @@ export default {
   width: 100%;
 }
 
-.category-select, .price-select, .location-select {
+.category-select,
+.price-select,
+.location-select {
   width: 100%;
 }
 
@@ -631,11 +701,11 @@ export default {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .marketplace-content {
     flex-direction: column;
   }
-  
+
   .desktop-only {
     display: none;
   }
@@ -645,7 +715,7 @@ export default {
   .products-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .filter-section {
     min-width: 100%;
   }
@@ -932,40 +1002,40 @@ export default {
   .marketplace-container {
     padding: 12px;
   }
-  
+
   .marketplace-content {
     flex-direction: column;
   }
-  
+
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
-  
+
   .product-image {
     height: 150px;
   }
-  
+
   .product-details {
     flex-direction: column;
   }
-  
-  .product-detail-left, 
+
+  .product-detail-left,
   .product-detail-right {
     max-width: 100%;
   }
-  
+
   .main-product-image {
     height: 300px;
   }
-  
+
   .mobile-hidden {
     display: none;
   }
-  
+
   .product-detail-info {
     padding: 16px;
   }
-  
+
   .product-detail-gallery,
   .product-detail-info {
     width: 100%;
