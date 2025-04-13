@@ -1,0 +1,39 @@
+/* 覆蓋 Element Plus 的主題色彩 */
+:root {
+  --el-color-primary: #007550 !important;
+  --el-color-primary-light-1: #198762 !important;
+  --el-color-primary-light-2: #2a9874 !important;
+  --el-color-primary-light-3: #3eaa85 !important;
+  --el-color-primary-light-4: #55bb98 !important;
+  --el-color-primary-light-5: #69ccaa !important;
+  --el-color-primary-light-6: #7edcbc !important;
+  --el-color-primary-light-7: #96edcf !important;
+  --el-color-primary-light-8: #b0f4df !important;
+  --el-color-primary-light-9: #d0faef !important;
+  --el-color-primary-dark-1: #006646 !important;
+}
+
+/* 主要按鈕樣式 */
+.el-button--primary {
+  --el-button-hover-bg-color: #009464 !important;
+  --el-button-active-bg-color: #005c3f !important;
+}
+
+/* 圓形頭像邊框顏色 */
+.avatar {
+  border-color: var(--el-color-primary-light-8) !important;
+}
+
+/* 表單元素獲取焦點時邊框顏色 */
+.el-input__inner:focus,
+.el-textarea__inner:focus {
+  border-color: var(--el-color-primary) !important;
+}
+
+/* 覆蓋危險按鈕顏色 */
+.el-button--danger {
+  --el-button-bg-color: #f56c6c !important;
+  --el-button-border-color: #f56c6c !important;
+  --el-button-hover-bg-color: #f78989 !important;
+  --el-button-hover-border-color: #f78989 !important;
+}
