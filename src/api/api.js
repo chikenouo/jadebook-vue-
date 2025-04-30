@@ -10,3 +10,6 @@ export const getAllCommentsApi = (postId) =>
 // 註冊
 export const registerApi = (registerData) =>
   request.post('/api/register', registerData)
+
+// 發文
+export const createPostApi = (postData) => request.post('/api/posts', postData)

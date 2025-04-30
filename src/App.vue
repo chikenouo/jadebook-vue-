@@ -17,13 +17,14 @@
 html,
 body {
   height: 100%;
-  overflow-y: auto !important; /* 强制允許垂直滾動 */
   margin: 0;
+  overflow-x: hidden;
 }
 
 #app {
   min-height: 100vh;
-  overflow-y: auto !important; /* 確保 #app 不限制滾動 */
+  position: relative;
+  overflow-x: hidden;
 }
 
 .container {
