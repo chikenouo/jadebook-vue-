@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 <!-- src/components/post/index.vue -->
 <script setup>
 import { ref, computed } from 'vue'
@@ -100,20 +96,10 @@ const confirmDeletePost = async () => {
 }
 </script>
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 <template>
   <div class="post-card">
     <!-- Post Header -->
     <div class="post-header">
-<<<<<<< HEAD
-      <div class="user-info" @click="goToUserProfile(post.userId)">
-        <img :src="post.photo || defaultAvatar" alt="Profile" class="avatar" />
-=======
-<<<<<<< HEAD
       <div class="user-info" @click="goToUserProfile(post.userId)">
         <img :src="post.photo || defaultAvatar" alt="Profile" class="avatar" />
         <div>
@@ -122,52 +108,19 @@ const confirmDeletePost = async () => {
         </div>
       </div>
 
-=======
-      <div class="user-info" @click="goToUserProfile(post.authorId)">
-        <img 
-          :src="post.author?.photo || require('@/assets/defaultAvatar.svg')" 
-          alt="Profile" 
-          class="avatar"
-        >
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
-        <div>
-          <div class="username">{{ post.userName || 'Unknown User' }}</div>
-          <div class="post-time">{{ formatDate(post.createdAt) }}</div>
-        </div>
-      </div>
-<<<<<<< HEAD
-
-=======
-      
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       <!-- Post Actions (Edit/Delete) -->
       <div class="post-actions" v-if="isCurrentUserPost">
         <el-dropdown trigger="click">
           <i class="el-icon-more"></i>
           <template #dropdown>
             <el-dropdown-menu>
-<<<<<<< HEAD
               <el-dropdown-item @click="editPost">編輯貼文</el-dropdown-item>
               <el-dropdown-item @click="deletePost">刪除貼文</el-dropdown-item>
-=======
-<<<<<<< HEAD
-              <el-dropdown-item @click="editPost">編輯貼文</el-dropdown-item>
-              <el-dropdown-item @click="deletePost">刪除貼文</el-dropdown-item>
-=======
-              <el-dropdown-item @click="editPost">Edit Post</el-dropdown-item>
-              <el-dropdown-item @click="deletePost">Delete Post</el-dropdown-item>
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </div>
     </div>
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
 
     <!-- Post Body -->
     <div class="post-body" @click="goToPostDetail">
@@ -207,81 +160,18 @@ const confirmDeletePost = async () => {
 
     <!-- Edit Post Dialog -->
     <el-dialog title="編輯貼文" v-model="editDialogVisible" width="500px">
-=======
-    
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
-    <!-- Post Body -->
-    <div class="post-body" @click="goToPostDetail">
-      <p>{{ post.content }}</p>
-      <img
-        v-if="post.image"
-        :src="post.image"
-        alt="Post Image"
-        class="post-image"
-      />
-    </div>
-
-    <!-- Post Footer -->
-    <div class="post-footer">
-      <div class="post-stats">
-        <span> <i class="fas fa-thumbs-up"></i> {{ post.likes || 0 }} </span>
-        <span @click="goToComments"> {{ post.commentsCount }} 則留言 </span>
-      </div>
-
-      <el-divider />
-
-      <div class="post-buttons">
-        <div class="action-button">
-          <i class="fas fa-thumbs-up"></i>
-          <span>讚</span>
-        </div>
-        <div class="action-button" @click="goToComments">
-          <i class="fas fa-comment"></i>
-          <span>留言</span>
-        </div>
-        <div class="action-button">
-          <i class="fas fa-share"></i>
-          <span>分享</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Post Dialog -->
-<<<<<<< HEAD
-    <el-dialog title="編輯貼文" v-model="editDialogVisible" width="500px">
-=======
-    <el-dialog
-      title="Edit Post"
-      v-model="editDialogVisible"
-      width="500px"
-    >
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       <el-form :model="editForm" @submit.prevent="saveEditedPost">
         <el-form-item>
           <el-input
             v-model="editForm.content"
             type="textarea"
             :rows="5"
-<<<<<<< HEAD
             placeholder="你在想什麼？"
-=======
-<<<<<<< HEAD
-            placeholder="你在想什麼？"
-=======
-            placeholder="What's on your mind?"
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
           />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-<<<<<<< HEAD
-          <el-button @click="editDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="saveEditedPost">儲存</el-button>
-=======
-<<<<<<< HEAD
           <el-button @click="editDialogVisible = false">取消</el-button>
           <el-button type="primary" @click="saveEditedPost">儲存</el-button>
         </span>
@@ -295,136 +185,14 @@ const confirmDeletePost = async () => {
         <span class="dialog-footer">
           <el-button @click="deleteDialogVisible = false">取消</el-button>
           <el-button type="danger" @click="confirmDeletePost">刪除</el-button>
-=======
-          <el-button @click="editDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="saveEditedPost">Save</el-button>
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
-        </span>
-      </template>
-    </el-dialog>
-
-    <!-- Delete Confirmation Dialog -->
-    <el-dialog title="刪除貼文" v-model="deleteDialogVisible" width="400px">
-      <p>確定要刪除這篇貼文嗎？此操作無法撤銷。</p>
-      <template #footer>
-        <span class="dialog-footer">
-<<<<<<< HEAD
-          <el-button @click="deleteDialogVisible = false">取消</el-button>
-          <el-button type="danger" @click="confirmDeletePost">刪除</el-button>
-=======
-          <el-button @click="deleteDialogVisible = false">Cancel</el-button>
-          <el-button type="danger" @click="confirmDeletePost">Delete</el-button>
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
         </span>
       </template>
     </el-dialog>
   </div>
 </template>
 
-<<<<<<< HEAD
 <style scoped>
 /* 樣式保持不變 */
-=======
-<<<<<<< HEAD
-<style scoped>
-/* 樣式保持不變 */
-=======
-<script>
-export default {
-  name: 'PostComponent',
-  props: {
-    post: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      editDialogVisible: false,
-      deleteDialogVisible: false,
-      editForm: {
-        content: ''
-      }
-    }
-  },
-  computed: {
-    currentUser() {
-      return this.$store.getters.currentUser
-    },
-    isCurrentUserPost() {
-      return this.currentUser && this.post.authorId === this.currentUser.id
-    }
-  },
-  methods: {
-    formatDate(dateString) {
-      if (!dateString) return 'Unknown date'
-      
-      const date = new Date(dateString)
-      const now = new Date()
-      const diffMs = now - date
-      const diffMins = Math.floor(diffMs / (1000 * 60))
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-      
-      if (diffMins < 60) {
-        return diffMins === 0 ? 'Just now' : `${diffMins}m ago`
-      } else if (diffHours < 24) {
-        return `${diffHours}h ago`
-      } else if (diffDays < 7) {
-        return `${diffDays}d ago`
-      } else {
-        return date.toLocaleDateString()
-      }
-    },
-    goToPostDetail() {
-      this.$router.push(`/post/${this.post.id}`)
-    },
-    goToUserProfile(userId) {
-      if (userId) {
-        this.$router.push(`/user/${userId}`)
-      }
-    },
-    editPost() {
-      this.editForm.content = this.post.content
-      this.editDialogVisible = true
-    },
-    async saveEditedPost() {
-      if (!this.editForm.content.trim()) return
-      
-      try {
-        await this.$store.dispatch('updatePost', {
-          postId: this.post.id,
-          postData: { content: this.editForm.content }
-        })
-        this.editDialogVisible = false
-        this.$message.success('Post updated successfully')
-      } catch (error) {
-        this.$message.error('Failed to update post')
-        console.error('Error updating post:', error)
-      }
-    },
-    deletePost() {
-      this.deleteDialogVisible = true
-    },
-    async confirmDeletePost() {
-      try {
-        await this.$store.dispatch('deletePost', this.post.id)
-        this.deleteDialogVisible = false
-        this.$message.success('Post deleted successfully')
-        this.$emit('delete', this.post.id)
-      } catch (error) {
-        this.$message.error('Failed to delete post')
-        console.error('Error deleting post:', error)
-      }
-    }
-  }
-}
-</script>
-
-<style scoped>
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 .post-card {
   background-color: white;
   border-radius: 8px;
@@ -476,21 +244,12 @@ export default {
   cursor: pointer;
 }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 .post-image {
   max-width: 100%;
   border-radius: 8px;
   margin-top: 8px;
 }
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 .post-footer {
   margin-top: 12px;
 }

@@ -10,9 +10,6 @@ export const getAllCommentsApi = (postId) =>
 // 註冊
 export const registerApi = (registerData) =>
   request.post('/api/register', registerData)
-<<<<<<< HEAD
 
 // 發文
 export const createPostApi = (postData) => request.post('/api/posts', postData)
-=======
->>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
