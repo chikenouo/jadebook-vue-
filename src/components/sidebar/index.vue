@@ -9,7 +9,15 @@
         active-class="active"
       >
         <img
+<<<<<<< HEAD
           :src="currentUser.photo || defaultAvatar"
+=======
+<<<<<<< HEAD
+          :src="currentUser.photo || defaultAvatar"
+=======
+          :src="currentUser.photo || require('@/assets/defaultAvatar.svg')"
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
           alt="Profile"
           class="sidebar-avatar"
         />
@@ -21,17 +29,41 @@
     <div class="sidebar-section">
       <router-link to="/" class="sidebar-item" exact-active-class="active">
         <i class="fas fa-home"></i>
+<<<<<<< HEAD
         <span>首頁</span>
+=======
+<<<<<<< HEAD
+        <span>首頁</span>
+=======
+        <span>Home</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </router-link>
 
       <div class="sidebar-item">
         <i class="fas fa-user-friends"></i>
+<<<<<<< HEAD
         <span>朋友</span>
+=======
+<<<<<<< HEAD
+        <span>朋友</span>
+=======
+        <span>Friends</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </div>
 
       <div class="sidebar-item">
         <i class="fas fa-users"></i>
+<<<<<<< HEAD
         <span>社團</span>
+=======
+<<<<<<< HEAD
+        <span>社團</span>
+=======
+        <span>Groups</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </div>
 
       <div class="sidebar-item">
@@ -41,30 +73,90 @@
 
       <div class="sidebar-item">
         <i class="fas fa-tv"></i>
+<<<<<<< HEAD
         <span>影片</span>
+=======
+<<<<<<< HEAD
+        <span>影片</span>
+=======
+        <span>Watch</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </div>
 
       <div class="sidebar-item">
         <i class="fas fa-bookmark"></i>
+<<<<<<< HEAD
         <span>典藏</span>
+=======
+<<<<<<< HEAD
+        <span>典藏</span>
+=======
+        <span>Saved</span>
+      </div>
+
+      <div class="sidebar-item">
+        <i class="fas fa-flag"></i>
+        <span>Pages</span>
+      </div>
+
+      <div class="sidebar-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Events</span>
+      </div>
+
+      <div class="sidebar-item">
+        <i class="fas fa-history"></i>
+        <span>Memories</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </div>
     </div>
 
     <!-- Shortcuts Section -->
     <div class="sidebar-section">
       <div class="section-header">
+<<<<<<< HEAD
         <h3>捷徑</h3>
+=======
+<<<<<<< HEAD
+        <h3>捷徑</h3>
+=======
+        <h3>Your Shortcuts</h3>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
         <span class="edit-link">Edit</span>
       </div>
 
       <div class="sidebar-item">
         <i class="fas fa-gamepad"></i>
+<<<<<<< HEAD
         <span>遊戲</span>
+=======
+<<<<<<< HEAD
+        <span>遊戲</span>
+=======
+        <span>Games</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </div>
 
       <div class="sidebar-item">
         <i class="fas fa-images"></i>
+<<<<<<< HEAD
         <span>相片</span>
+=======
+<<<<<<< HEAD
+        <span>相片</span>
+=======
+        <span>Photos</span>
+      </div>
+
+      <div class="sidebar-item">
+        <i class="fas fa-video"></i>
+        <span>Videos</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </div>
     </div>
 
@@ -75,7 +167,17 @@
         <a href="#">Advertising</a> ·
         <a href="#">Cookies</a>
       </div>
+<<<<<<< HEAD
       <div class="copyright">JadeBook © {{ new Date().getFullYear() }}</div>
+=======
+<<<<<<< HEAD
+      <div class="copyright">JadeBook © {{ new Date().getFullYear() }}</div>
+=======
+      <div class="copyright">
+        Facebook Clone © {{ new Date().getFullYear() }}
+      </div>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
     </div>
   </div>
 </template>
@@ -83,7 +185,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from '@/api/request'
+<<<<<<< HEAD
 import defaultAvatar from '@/assets/defaultAvatar.svg'
+=======
+<<<<<<< HEAD
+import defaultAvatar from '@/assets/defaultAvatar.svg'
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 
 const currentUser = ref(null)
 

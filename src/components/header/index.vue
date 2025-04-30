@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -35,13 +39,26 @@ const handleCommand = async (command) => {
   }
 }
 </script>
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 <!-- header.vue -->
 <template>
   <div class="header-container">
     <div class="header-left">
       <!-- Logo -->
       <router-link to="/" class="logo-link">
+<<<<<<< HEAD
         <img src="@/assets/mountain.png" alt="Logo" class="logo" />
+=======
+<<<<<<< HEAD
+        <img src="@/assets/mountain.png" alt="Logo" class="logo" />
+=======
+        <img src="@/assets/logo.svg" alt="Logo" class="logo" />
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
       </router-link>
 
       <!-- Search Bar -->
@@ -84,11 +101,25 @@ const handleCommand = async (command) => {
       <el-dropdown trigger="click" v-if="currentUser" @command="handleCommand">
         <div class="user-profile">
           <img
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
             :src="currentUser.photo || defaultAvatar"
             alt="Profile"
             class="avatar"
           />
           <span class="username desktop-only">{{ currentUser?.name }}</span>
+<<<<<<< HEAD
+=======
+=======
+            :src="currentUser.photo || require('@/assets/defaultAvatar.svg')"
+            alt="Profile"
+            class="avatar"
+          />
+          <span class="username desktop-only">{{ currentUser.userName }}</span>
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -110,6 +141,59 @@ const handleCommand = async (command) => {
   </div>
 </template>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import axios from '@/api/request'
+
+const router = useRouter()
+const searchQuery = ref('')
+const currentUser = ref(null)
+
+// 獲取當前用戶資料
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/user/me', {
+      withCredentials: true,
+    })
+    currentUser.value = response.data
+  } catch (error) {
+    console.error('Error fetching current user:', error)
+    currentUser.value = null
+  }
+})
+
+// 處理下拉選單命令
+const handleCommand = async (command) => {
+  switch (command) {
+    case 'profile':
+      if (currentUser.value) {
+        router.push(`/user/${currentUser.value.id}`)
+      }
+      break
+    case 'logout':
+      try {
+        // 調用後端登出 API
+        await axios.post('/api/logout', {}, { withCredentials: true })
+        ElMessage.success('登出成功')
+        currentUser.value = null
+        router.push('/login')
+      } catch (error) {
+        console.error('Error during logout:', error)
+        ElMessage.error('登出失敗')
+      }
+      break
+  }
+}
+</script>
+
+>>>>>>> c3fdf757f0a4fab19f6f1291d90bd81ecd77547e
+>>>>>>> bb60ad9ea6e7ef71e5106743ea0ff76c097767f1
 <style scoped>
 .header-container {
   display: flex;
