@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import axios from '@/api/request'
 import { useUserStore } from '@/stores/userStore'
@@ -8,6 +8,7 @@ import { storeToRefs } from 'pinia'
 import defaultAvatar from '@/assets/defaultAvatar.svg'
 
 const router = useRouter()
+const route = useRoute()
 const searchQuery = ref('')
 const userStore = useUserStore()
 const { userData: currentUser } = storeToRefs(userStore)
@@ -59,10 +60,18 @@ const handleCommand = async (command) => {
     <!-- Navigation Links -->
     <div class="header-center desktop-only">
       <div class="nav-links">
-        <router-link to="/" class="nav-link" active-class="active">
+        <router-link
+          to="/"
+          class="nav-link"
+          :class="{ active: route.path === '/' || route.path === '/home' }"
+        >
           <i class="fas fa-home"></i>
         </router-link>
-        <router-link to="/marketplace" class="nav-link" active-class="active">
+        <router-link
+          to="/marketplace"
+          class="nav-link"
+          exact-active-class="active"
+        >
           <i class="fas fa-store"></i>
         </router-link>
       </div>
@@ -187,7 +196,7 @@ const handleCommand = async (command) => {
 }
 
 .nav-link.active {
-  color: var(--esun-green);
+  color: var(--esun-green-dark);
 }
 
 .nav-link.active::after {
@@ -197,7 +206,16 @@ const handleCommand = async (command) => {
   left: 0;
   right: 0;
   height: 3px;
-  background-color: var(--esun-green);
+  background-color: var(--esun-green-dark);
+  display: block;
+}
+
+.nav-link i {
+  color: var(--esun-green);
+}
+
+.nav-link.active i {
+  color: var(--esun-green-dark);
 }
 
 .nav-link:hover:not(.active) {
@@ -223,7 +241,7 @@ const handleCommand = async (command) => {
 
 .icon-button i {
   font-size: 18px;
-  color: var(--esun-green);
+  color: #4caf50;
 }
 
 .icon-button:hover {

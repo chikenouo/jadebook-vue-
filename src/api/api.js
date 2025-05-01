@@ -13,3 +13,7 @@ export const registerApi = (registerData) =>
 
 // 發文
 export const createPostApi = (postData) => request.post('/api/posts', postData)
+
+// 新增留言
+export const createCommentApi = (postId, commentData) =>
+  request.post(`/api/posts/${postId}/comments`, commentData)

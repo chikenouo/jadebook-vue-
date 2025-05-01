@@ -17,6 +17,8 @@ const props = defineProps({
   },
 })
 
+console.log('Post component received props:', props)
+
 const emit = defineEmits(['delete'])
 
 const router = useRouter()
@@ -29,10 +31,9 @@ const editForm = ref({
 })
 
 const currentUser = computed(() => userStore.getUserData)
-const currentUserId = computed(() => userStore.getUserId)
-const isCurrentUserPost = computed(
-  () => currentUserId.value && props.post.userId === currentUserId.value
-)
+const isCurrentUserPost = computed(() => {
+  return userStore.getUserId
+})
 
 const formatDate = (dateString) => {
   if (!dateString) return '未知時間'

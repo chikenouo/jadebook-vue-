@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import PostComponent from '@/components/post/index.vue'
 import defaultAvatar from '@/assets/defaultAvatar.svg'
 import axios from '@/api/request'
 import { createPostApi } from '@/api/api'
+import { useUserStore } from '@/stores/userStore'
 
 const posts = ref([])
 const newPostContent = ref('')
@@ -16,7 +17,10 @@ const fetchPosts = async () => {
     loading.value = true
     const response = await axios.get('/api/posts')
     console.log('Fetched posts:', response)
-    posts.value = response
+    posts.value = response.map((post) => ({
+      ...post,
+      userId: String(post.userId),
+    }))
   } catch (error) {
     ElMessage.error('獲取貼文失敗')
     console.error('Error fetching posts:', error)
@@ -62,6 +66,8 @@ const handlePostDelete = async (postId) => {
 onMounted(() => {
   fetchPosts()
 })
+const userStore = useUserStore()
+const currentUserId = computed(() => Number(userStore.getUserId))
 </script>
 
 <template>
@@ -87,6 +93,7 @@ onMounted(() => {
         :key="post.postId"
         :post="post"
         :defaultAvatar="defaultAvatar"
+        :currentUserId="currentUserId.value"
         @delete="handlePostDelete"
       />
     </div>

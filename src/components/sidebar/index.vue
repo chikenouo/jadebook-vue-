@@ -164,11 +164,11 @@ onMounted(async () => {
   justify-content: center;
   margin-right: 12px;
   font-size: 18px;
-  color: #1877f2;
+  color: #4caf50;
 }
 
 .sidebar-item.active i {
-  color: #1877f2;
+  color: #4caf50;
   background-color: #c7e3ff;
 }
 
